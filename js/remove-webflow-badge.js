@@ -41,15 +41,25 @@
     // - subtree: Set to true to observe changes in the entire DOM subtree
     const observerConfig = { childList: true, subtree: true };
 
-    // Start observing the document body for configured mutations
-    // This ensures that even if the badge is added very late, it will be caught.
-    observer.observe(document.body, observerConfig);
+    // Wait for the DOM to be fully loaded before observing the body
+    document.addEventListener('DOMContentLoaded', function() {
+        // Start observing the document body for configured mutations
+        // This ensures that even if the badge is added very late, it will be caught.
+        if (document.body) { // Defensive check, though body should exist by DOMContentLoaded
+            observer.observe(document.body, observerConfig);
+            console.log('MutationObserver started on document.body.');
+        } else {
+            console.error('Error: document.body not found when attempting to start MutationObserver.');
+        }
 
-    // Also call it once immediately in case the badge is already present on initial load
-    // before any mutations occur.
-    document.addEventListener('DOMContentLoaded', removeWebflowBadge);
+        // Also call it once immediately in case the badge is already present on initial load
+        removeWebflowBadge();
+    });
+
     // For cases where the script might load after DOMContentLoaded,
-    // also call it directly when the script runs.
+    // also call it directly when the script runs (though DOMContentLoaded is preferred for observer setup).
+    // This line is now primarily for immediate removal if the badge is already present
+    // and the DOMContentLoaded event has already fired by the time this script runs.
     removeWebflowBadge();
 
 })();

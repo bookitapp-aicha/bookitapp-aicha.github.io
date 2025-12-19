@@ -1,0 +1,11 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "AGWQWMX868.com.book-it.app",
+                "paths": [ "*" ]
+            }
+        ]
+    }
+}

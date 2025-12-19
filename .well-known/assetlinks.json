@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.appdevslabs.bookit",
+            "sha256_cert_fingerprints": [
+                "6B:97:3F:68:E1:2B:E7:60:46:B5:52:23:66:90:E9:12:36:FE:FF:2B:C6:DA:E5:6E:6F:0E:51:65:C1:41:E9:51"
+            ]
+        }
+    }
+]

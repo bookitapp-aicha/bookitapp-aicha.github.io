@@ -213,6 +213,7 @@ ul {
 	border-radius: 1000px 1000px 0 0;
 	z-index: 2;
 	overflow: visible;
+	opacity: 0;
 }
 
 .phone-frame-bg {

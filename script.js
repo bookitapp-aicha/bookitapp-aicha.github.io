@@ -40,11 +40,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
         delay: 0.5
     });
 
-    gsap.from(".phone-frame", {
+    gsap.fromTo(".phone-frame", {
+        opacity: 0,
+			},{
+			opacity: 1,
+			duration: 0.3,
+			ease: "power3.out",
+			delay: 0
+			});
+    gsap.fromTo(".phone-frame > div", {
         y: 100,
         opacity: 0,
         duration: 1.2,
         ease: "power3.out",
-        delay: 0
-    });
+        delay: 0,
+			},{
+			y: 0,
+			opacity: 1,
+			duration: 1.2,
+			ease: "power3.out",
+			delay: 0,
+				stagger: 0.4
+			});
 });

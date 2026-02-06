@@ -52,14 +52,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				stagger: 0.3
 			});
 
-    gsap.from(".notification-card", {
+    gsap.fromTo(".notification-card", {
         y: 50,
         opacity: 0,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power2.out",
-        delay: 1.2
-    });
+    },{
+			y: 0,
+			opacity: 1,
+			duration: 0.8,
+			ease: "power2.out",
+			delay: 1.2,
+			stagger: 0.2
+		});
 
     gsap.fromTo(".phone-frame", {
         opacity: 0,

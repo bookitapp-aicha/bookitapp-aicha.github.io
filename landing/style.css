@@ -146,7 +146,9 @@ ul {
 	line-height: 24px;
 	transition: all 0.3s ease;
 }
-
+.star-layer{
+	opacity: 0;
+}
 .header-cta:hover {
 	background-color: var(--magenta-600);
 	color: var(--neutral-white);
@@ -383,6 +385,7 @@ ul {
 	z-index: 10;
 	width: 50dvw;
 	height: 20dvh;
+	opacity: 0;
 }
 
 .notification-card {
@@ -396,7 +399,7 @@ ul {
 	-webkit-backdrop-filter: blur(22.5px);
 	border-radius: 24px;
 	width: 519px;
-	opacity: 0;
+
 }
 
 .notification-card-1 {

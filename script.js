@@ -51,18 +51,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				delay: 0,
 				stagger: 0.3
 			});
+    gsap.to(".notifications-container", {
+			opacity: 1,
+			delay: 1,
+			duration: 0.3,
+		});
 
-    gsap.fromTo(".notification-card", {
+    gsap.from(".notification-card", {
         y: 50,
         opacity: 0,
-    },{
-			y: 0,
-			opacity: 1,
-			duration: 0.8,
-			ease: "power2.out",
-			delay: 1.2,
-			stagger: 0.2
-		});
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power2.out",
+        delay: 1.2
+    });
 
     gsap.fromTo(".phone-frame", {
         opacity: 0,
@@ -84,5 +86,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				ease: "power3.out",
 				delay: 0.4,
 				stagger: 0.4
+			});
+    gsap.fromTo(".star-layer", {
+			rotate: '-70deg'
+		},{
+				opacity: 1,
+				duration: 0.8,
+				ease: "power3.out",
+				delay: 0,
+				rotate: '75deg',
+				stagger: 0.2
 			});
 });

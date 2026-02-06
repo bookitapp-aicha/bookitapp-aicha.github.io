@@ -30,6 +30,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
             headerCta.href = deeplink;
         }
     }
+    gsap.fromTo(".hero-content > div", {
+        y: 100,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        delay: 0,
+			},{
+				y: 0,
+				opacity: 1,
+				duration: 1.2,
+				ease: "power3.out",
+				delay: 0,
+				stagger: 0.3
+			});
 
     gsap.from(".notification-card", {
         y: 50,
@@ -53,13 +67,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
         opacity: 0,
         duration: 1.2,
         ease: "power3.out",
-        delay: 0,
 			},{
-			y: 0,
-			opacity: 1,
-			duration: 1.2,
-			ease: "power3.out",
-			delay: 0,
+				y: 0,
+				opacity: 1,
+				duration: 1.2,
+				ease: "power3.out",
+				delay: 0.4,
 				stagger: 0.4
 			});
 });

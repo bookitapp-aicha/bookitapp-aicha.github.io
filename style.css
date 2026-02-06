@@ -291,6 +291,7 @@ ul {
 	gap: 40px;
 	font-size: 1rem;
 	max-width: 500px;
+	opacity: 0;
 }
 
 .hero-subtitle {

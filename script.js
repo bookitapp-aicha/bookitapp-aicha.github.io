@@ -30,12 +30,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
             headerCta.href = deeplink;
         }
     }
+		gsap.fromTo(".hero-content", {
+        opacity: 0,
+			},{
+			opacity: 1,
+			duration: 0.3,
+			ease: "power3.out",
+			delay: 0
+			});
     gsap.fromTo(".hero-content > div", {
         y: 100,
         opacity: 0,
         duration: 1.2,
         ease: "power3.out",
-        delay: 0,
 			},{
 				y: 0,
 				opacity: 1,
@@ -51,7 +58,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         duration: 0.8,
         stagger: 0.2,
         ease: "power2.out",
-        delay: 0.5
+        delay: 1.2
     });
 
     gsap.fromTo(".phone-frame", {

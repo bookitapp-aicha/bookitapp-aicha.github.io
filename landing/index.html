@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>bookit - Intelligent Booking. Effortless Retention.</title>
+		<link rel="stylesheet" href="style.css" />
+		<script>
+			var enableForm = false;
+
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<!-- ===================================
+             HERO SECTION
+             =================================== -->
+			<section class="hero">
+				<!-- Background Gradient Layer -->
+				<div class="hero-bg-gradient" data-layer="hero-bg"></div>
+
+				<!-- Header -->
+				<header class="header">
+					<a href="/" class="logo" aria-label="bookit Home">
+						<!-- Logo assembled from individual vector parts -->
+						<svg width="80" height="35" viewBox="0 0 104 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g clipPath="url(#clip0_79_4725)">
+								<path
+									d="M0 33.5712C0.234739 22.6302 0.234739 10.4238 0 0H6.29148C6.24501 4.36709 6.15087 8.96774 6.01027 13.4278H6.05674C7.4187 10.8456 9.71842 9.38955 12.3482 9.38955H12.4888C17.3719 9.38955 20.1423 13.9914 20.1423 22.1608C20.1423 30.3302 17.466 34.2742 12.4888 34.2742H12.4423C9.67195 34.2742 7.4187 32.9123 5.86966 30.3302H5.82319C5.91732 31.4097 5.9638 32.4905 6.01146 33.57H0V33.5712ZM9.57782 29.2506C12.3947 29.2506 13.9449 26.6208 13.9449 22.0202V21.5507C13.9449 17.0907 12.4423 14.3667 9.90669 14.3667C8.54473 14.3667 7.2769 15.2115 6.24501 16.8083C6.19853 19.6251 6.19853 24.837 6.19853 27.5133C7.23162 28.7335 8.21705 29.2506 9.57901 29.2506H9.57782Z"
+									fill="#790077"
+								/>
+								<path
+									d="M31.2705 9.39062H31.8806C38.2662 9.39062 41.6002 13.6636 41.6002 21.7388C41.6002 29.8141 38.2197 34.2753 31.8806 34.2753H31.2705C24.979 34.2753 21.645 29.8153 21.645 21.6924C21.645 13.5695 24.979 9.39062 31.2705 9.39062ZM35.5435 21.833V21.6924C35.5435 16.5281 34.2756 14.3678 31.647 14.3678C29.0184 14.3678 27.7494 16.5281 27.7494 21.6924V21.833C27.7494 27.139 29.0172 29.2517 31.6935 29.2517C34.3698 29.2517 35.5435 27.2332 35.5435 21.833Z"
+									fill="#790077"
+								/>
+								<path
+									d="M52.728 9.39062H53.3381C59.7237 9.39062 63.0577 13.6636 63.0577 21.7388C63.0577 29.8141 59.6772 34.2753 53.3381 34.2753H52.728C46.4365 34.2753 43.1025 29.8153 43.1025 21.6924C43.1025 13.5695 46.4365 9.39062 52.728 9.39062ZM56.9998 21.833V21.6924C56.9998 16.5281 55.732 14.3678 53.1034 14.3678C50.4748 14.3678 49.2069 16.5281 49.2069 21.6924V21.833C49.2069 27.139 50.4748 29.2517 53.151 29.2517C55.8273 29.2517 57.001 27.2332 57.001 21.833H56.9998Z"
+									fill="#790077"
+								/>
+								<path
+									d="M64.5603 33.5712C64.7485 22.6314 64.7485 10.4238 64.5603 0H70.8517C70.7576 6.01027 70.6635 11.5975 70.7111 18.2179H71.6978C74.6552 18.2179 75.8289 16.2923 75.8289 10.518V10.095H81.3221V10.518C81.3221 16.5282 79.6324 19.7681 76.3449 20.2841L76.0637 20.3305V20.6117C76.2519 25.8236 77.8474 28.3116 80.5237 28.3116C81.2279 28.3116 81.9786 28.171 82.4481 28.0304C82.4481 30.0025 82.4946 31.8804 82.6364 33.806C81.8845 34.0872 80.8049 34.2754 79.7718 34.2754C75.17 34.2754 72.7761 30.5661 72.2125 22.4432H70.7564C70.7564 25.7772 70.7564 30.3778 70.8506 33.5712H64.5591H64.5603Z"
+									fill="#790077"
+								/>
+								<path
+									d="M87.6373 7.58318C85.2899 7.58318 84.7263 6.9731 84.7263 4.10857V3.92031C84.7263 1.00931 85.2422 0.351562 87.5908 0.351562C89.9394 0.351562 90.5959 0.961645 90.5959 3.92031V4.10857C90.5959 6.9731 90.0323 7.58318 87.6384 7.58318H87.6373ZM84.5142 33.5713C84.6548 26.1061 84.6548 17.2325 84.5142 10.095H90.8056C90.6174 17.2313 90.6174 26.1061 90.8056 33.5713H84.5142Z"
+									fill="#790077"
+								/>
+								<path
+									d="M94.4222 33.5714C94.6105 27.9377 94.657 20.5655 94.657 14.8841H92.7314C92.6373 13.1944 92.5431 11.9731 92.4502 10.1416H94.657C94.6105 7.84071 94.5628 5.58745 94.5628 3.33301H100.808C100.761 5.39919 100.714 7.7001 100.667 10.1416H103.954C103.954 11.2212 103.954 13.2409 104 14.8841H100.666C100.62 21.1291 100.62 28.9231 100.807 33.5714H94.421H94.4222Z"
+									fill="#790077"
+								/>
+							</g>
+							<defs>
+								<clipPath id="clip0_79_4725">
+									<rect width="104" height="34.2754" fill="white" />
+								</clipPath>
+							</defs>
+						</svg>
+					</a>
+					<a href="https://bookings.bookit-app.com/login" class="header-cta">
+						Login
+						<span class="header-icon">
+							<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</span>
+					</a>
+				</header>
+
+				<!-- Hero Content -->
+				<div class="hero-content">
+					<div class="hero-text">
+						<p class="hero-subtitle">Intelligent Booking. Effortless Retention.</p>
+						<h1 class="hero-title">Run Your Business Smarter with Intelligent Booking</h1>
+						<p class="hero-description">
+							bookit is an all-in-one booking and business management platform for beauty, health & wellness, and fitness businesses designed to automate
+							bookings and make repeat visits effortless.
+						</p>
+					</div>
+					<div class="hero-buttons">
+						<a href="https://bookings.bookit-app.com/signup" class="btn-primary" style="
+    /* box-shadow: 3px 3px 16px rgb(121 0 119 / 34%); */
+">Register Your Business</a>
+						<a href="#demo" id="book-a-demo" class="btn-text">
+							Book a Demo
+							<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#790077" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</a>
+					</div>
+				</div>
+
+				<!-- Phone Frame Container -->
+				<div class="phone-frame">
+					<div class="phone-frame-bg" data-layer="phone-bg"></div>
+
+					<!-- Hand with Phone - Separate Layer -->
+					<div class="hand-phone-layer" data-layer="hand-phone">
+						<img src="assets/hand-phone-mockup.png" alt="Hand holding phone with bookit app" loading="lazy" />
+					</div>
+				</div>
+
+				<!-- Decorative Stars - Each on own layer -->
+				<img src="assets/star-1.svg" alt="" class="star-layer star-1" data-layer="star-small" aria-hidden="true" />
+				<img src="assets/star-2.svg" alt="" class="star-layer star-2" data-layer="star-large" aria-hidden="true" />
+
+				<!-- Notification Cards - Each on own layer -->
+				<div class="notifications-container">
+					<div class="notification-card notification-card-1" data-layer="notification-1">
+						<div class="notification-icon">
+							<img src="assets/logo-white.svg" alt="bookit" />
+						</div>
+						<div class="notification-content">
+							<div class="notification-header">
+								<span class="notification-title">Ready for your refresh?</span>
+								<span class="notification-time">2m ago</span>
+							</div>
+							<p class="notification-message">It's been 6 weeks since your last visit. We've saved your usual Tuesday at 2 PM—want to bookit?</p>
+						</div>
+					</div>
+					<div class="notification-card notification-card-2" data-layer="notification-2">
+						<div class="notification-icon">
+							<img src="assets/logo-white.svg" alt="bookit" />
+						</div>
+						<div class="notification-content">
+							<div class="notification-header">
+								<span class="notification-title">Ready for your refresh?</span>
+								<span class="notification-time">2m ago</span>
+							</div>
+							<p class="notification-message">It's been 6 weeks since your last visit. We've saved your usual Tuesday at 2 PM—want to bookit?</p>
+						</div>
+					</div>
+					<div class="notification-card notification-card-3" data-layer="notification-3">
+						<div class="notification-icon">
+							<img src="assets/logo-white.svg" alt="bookit" />
+						</div>
+						<div class="notification-content">
+							<div class="notification-header">
+								<span class="notification-title">Ready for your refresh?</span>
+								<span class="notification-time">2m ago</span>
+							</div>
+							<p class="notification-message">It's been 6 weeks since your last visit. We've saved your usual Tuesday at 2 PM—want to bookit?</p>
+						</div>
+					</div>
+					<div class="notification-card notification-card-4" data-layer="notification-4">
+						<div class="notification-icon">
+							<img src="assets/logo-white.svg" alt="bookit" />
+						</div>
+						<div class="notification-content">
+							<div class="notification-header">
+								<span class="notification-title">Ready for your refresh?</span>
+								<span class="notification-time">2m ago</span>
+							</div>
+							<p class="notification-message">It's been 6 weeks since your last visit. We've saved your usual Tuesday at 2 PM—want to bookit?</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+				<!-- Download Buttons Layer -->
+				<div class="download-buttons-layer" data-layer="download-buttons">
+					<div class="download-buttons-container"><a href="https://apps.apple.com/eg/app/bookit-business/id6748218245"><img src="assets/appstore.png" alt="Download on App Store" /></a><a href="https://play.google.com/store/apps/details?id=com.appdevslabs.bookit"><img src="assets/googleplay.png" alt="Download on Google Play" /></a></div>
+				</div>
+			<!-- ===================================
+             SECTION 2 - PAIN POINTS
+             =================================== -->
+			<section class="pain-points-section">
+				<div class="pain-points-content">
+					<h2 class="section-title">Booking shouldn't be this hard.</h2>
+					<div class="pain-points-grid">
+						<div class="pain-point-item">
+							<p>Endless back-and-forth messages</p>
+						</div>
+						<div class="pain-point-item">
+							<p>Manual scheduling errors</p>
+						</div>
+						<div class="pain-point-item">
+							<p>Missed appointments and constant no-shows</p>
+						</div>
+						<div class="pain-point-item">
+							<p>Time lost managing bookings instead of growing your business</p>
+						</div>
+					</div>
+				</div>
+
+			</section>
+
+			<!-- ===================================
+             SECTION 3 - BOOKIT REPLACES
+             =================================== -->
+			<section class="replaces-section">
+				<!-- Background Gradient Layer -->
+				<div class="replaces-bg-gradient" data-layer="replaces-bg"></div>
+
+				<div class="replaces-content">
+					<span class="bookit-badge">
+						<svg width="80" height="35" viewBox="0 0 104 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g clipPath="url(#clip0_79_4725)">
+								<path
+									d="M0 33.5712C0.234739 22.6302 0.234739 10.4238 0 0H6.29148C6.24501 4.36709 6.15087 8.96774 6.01027 13.4278H6.05674C7.4187 10.8456 9.71842 9.38955 12.3482 9.38955H12.4888C17.3719 9.38955 20.1423 13.9914 20.1423 22.1608C20.1423 30.3302 17.466 34.2742 12.4888 34.2742H12.4423C9.67195 34.2742 7.4187 32.9123 5.86966 30.3302H5.82319C5.91732 31.4097 5.9638 32.4905 6.01146 33.57H0V33.5712ZM9.57782 29.2506C12.3947 29.2506 13.9449 26.6208 13.9449 22.0202V21.5507C13.9449 17.0907 12.4423 14.3667 9.90669 14.3667C8.54473 14.3667 7.2769 15.2115 6.24501 16.8083C6.19853 19.6251 6.19853 24.837 6.19853 27.5133C7.23162 28.7335 8.21705 29.2506 9.57901 29.2506H9.57782Z"
+									fill="white"
+								/>
+								<path
+									d="M31.2705 9.39062H31.8806C38.2662 9.39062 41.6002 13.6636 41.6002 21.7388C41.6002 29.8141 38.2197 34.2753 31.8806 34.2753H31.2705C24.979 34.2753 21.645 29.8153 21.645 21.6924C21.645 13.5695 24.979 9.39062 31.2705 9.39062ZM35.5435 21.833V21.6924C35.5435 16.5281 34.2756 14.3678 31.647 14.3678C29.0184 14.3678 27.7494 16.5281 27.7494 21.6924V21.833C27.7494 27.139 29.0172 29.2517 31.6935 29.2517C34.3698 29.2517 35.5435 27.2332 35.5435 21.833Z"
+									fill="white"
+								/>
+								<path
+									d="M52.728 9.39062H53.3381C59.7237 9.39062 63.0577 13.6636 63.0577 21.7388C63.0577 29.8141 59.6772 34.2753 53.3381 34.2753H52.728C46.4365 34.2753 43.1025 29.8153 43.1025 21.6924C43.1025 13.5695 46.4365 9.39062 52.728 9.39062ZM56.9998 21.833V21.6924C56.9998 16.5281 55.732 14.3678 53.1034 14.3678C50.4748 14.3678 49.2069 16.5281 49.2069 21.6924V21.833C49.2069 27.139 50.4748 29.2517 53.151 29.2517C55.8273 29.2517 57.001 27.2332 57.001 21.833H56.9998Z"
+									fill="white"
+								/>
+								<path
+									d="M64.5603 33.5712C64.7485 22.6314 64.7485 10.4238 64.5603 0H70.8517C70.7576 6.01027 70.6635 11.5975 70.7111 18.2179H71.6978C74.6552 18.2179 75.8289 16.2923 75.8289 10.518V10.095H81.3221V10.518C81.3221 16.5282 79.6324 19.7681 76.3449 20.2841L76.0637 20.3305V20.6117C76.2519 25.8236 77.8474 28.3116 80.5237 28.3116C81.2279 28.3116 81.9786 28.171 82.4481 28.0304C82.4481 30.0025 82.4946 31.8804 82.6364 33.806C81.8845 34.0872 80.8049 34.2754 79.7718 34.2754C75.17 34.2754 72.7761 30.5661 72.2125 22.4432H70.7564C70.7564 25.7772 70.7564 30.3778 70.8506 33.5712H64.5591H64.5603Z"
+									fill="white"
+								/>
+								<path
+									d="M87.6373 7.58318C85.2899 7.58318 84.7263 6.9731 84.7263 4.10857V3.92031C84.7263 1.00931 85.2422 0.351562 87.5908 0.351562C89.9394 0.351562 90.5959 0.961645 90.5959 3.92031V4.10857C90.5959 6.9731 90.0323 7.58318 87.6384 7.58318H87.6373ZM84.5142 33.5713C84.6548 26.1061 84.6548 17.2325 84.5142 10.095H90.8056C90.6174 17.2313 90.6174 26.1061 90.8056 33.5713H84.5142Z"
+									fill="white"
+								/>
+								<path
+									d="M94.4222 33.5714C94.6105 27.9377 94.657 20.5655 94.657 14.8841H92.7314C92.6373 13.1944 92.5431 11.9731 92.4502 10.1416H94.657C94.6105 7.84071 94.5628 5.58745 94.5628 3.33301H100.808C100.761 5.39919 100.714 7.7001 100.667 10.1416H103.954C103.954 11.2212 103.954 13.2409 104 14.8841H100.666C100.62 21.1291 100.62 28.9231 100.807 33.5714H94.421H94.4222Z"
+									fill="white"
+								/>
+							</g>
+							<defs>
+								<clipPath id="clip0_79_4725">
+									<rect width="104" height="34.2754" fill="white" />
+								</clipPath>
+							</defs>
+						</svg>
+					</span>
+					<p class="replaces-text">replaces manual booking with <span class="highlight">intelligent automation</span> so retention happens naturally.</p>
+				</div>
+			</section>
+
+			<!-- ===================================
+             SECTION 4 - OUR SOLUTION
+             =================================== -->
+			<section class="solution-section">
+				<div class="solution-content">
+					<div class="solution-header">
+						<p class="solution-label">Our solution</p>
+						<h2 class="solution-title">One platform to book, manage, & retain clients</h2>
+					</div>
+					<p class="solution-description">
+						bookit replaces manual booking with intelligent automation.<br />
+						From real-time availability and instant confirmations to behavior-aware recommendations, bookit helps businesses operate smoothly while giving
+						clients a better booking experience.
+					</p>
+				</div>
+			</section>
+
+			<!-- ===================================
+             SECTION 5 - SMART FEATURES
+             =================================== -->
+			<section class="features-section">
+				<h2 class="features-title">Smart Features</h2>
+				<div class="features-grid">
+					<!-- Booking & Scheduling Card -->
+					<div class="feature-card fixed-height">
+						<div class="feature-icon">
+							<img src="assets/icon-booking.svg" alt="" aria-hidden="true" />
+						</div>
+						<div class="feature-content">
+							<h3 class="feature-name">Booking & Scheduling</h3>
+							<ul class="feature-list">
+								<li>Appointment and class booking</li>
+								<li>Real-time availability</li>
+								<li>Automatic email & Whatsapp confirmations</li>
+								<li>Smart scheduling logic</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Business Operations Card -->
+					<div class="feature-card fixed-height">
+						<div class="feature-icon">
+							<img src="assets/icon-business.svg" alt="" aria-hidden="true" />
+						</div>
+						<div class="feature-content">
+							<h3 class="feature-name">Business Operations</h3>
+							<ul class="feature-list">
+								<li>Unlimited staff</li>
+								<li>Staff schedules and shifts</li>
+								<li>Unlimited locations</li>
+								<li>Services, offerings, and packages</li>
+								<li>Location-specific pricing</li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Client Experience & Retention Card -->
+					<div class="feature-card tall">
+						<div class="feature-icon">
+							<img src="assets/icon-client.svg" alt="" aria-hidden="true" />
+						</div>
+						<div class="feature-content">
+							<h3 class="feature-name">Client Experience & Retention</h3>
+							<ul class="feature-list">
+								<li>Centralized client profiles</li>
+								<li>Automatic email & Whatsapp confirmations</li>
+								<li>Intelligent slot recommendations</li>
+								<li>Packages and repeat visit optimization</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ===================================
+             SECTION 6 - EFFORTLESS RETENTION
+             =================================== -->
+			<section class="retention-section">
+				<div class="retention-content">
+					<h2 class="retention-title">Effortless Retention</h2>
+					<div class="retention-description">
+						<p>
+							bookit learns how clients prefer to book and then recommends the best available times with the practitioner they like, when they're most likely to
+							return.
+						</p>
+						<p>The more your clients book, the smarter bookit becomes.</p>
+					</div>
+				</div>
+			</section>
+
+			<!-- ===================================
+             SECTION 7 - BUSINESS TYPES
+             =================================== -->
+			<section class="business-section">
+				<div class="business-header">
+					<h2 class="business-title">Flexible tools for every type of business:</h2>
+					<p class="business-subtitle">Whether you operate a single location or multiple branches, bookit scales with your business.</p>
+				</div>
+				<div class="business-grid">
+					<!-- Health & Wellness Card -->
+					<div class="business-card">
+						<div class="business-image-container wellness">
+							<div class="image-gallery">
+								<!-- Image 1 -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-1" data-layer="wellness-img-1">
+										<img src="assets/wellness-1.jpg" alt="Wellness service" />
+									</div>
+								</div>
+								<!-- Image 3 (Middle in DOM order but right column visually in previous setup) -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-3" data-layer="wellness-img-3">
+										<img src="assets/wellness-3.jpg" alt="Wellness experience" />
+									</div>
+								</div>
+								<!-- Image 2 -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-2" data-layer="wellness-img-2">
+										<img src="assets/wellness-2.jpg" alt="Wellness treatment" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="business-card-content">
+							<h3 class="business-card-title">Health & Wellness</h3>
+							<p class="business-card-description">Manage appointments, practitioners, and recurring visits — without manual follow-ups.</p>
+						</div>
+					</div>
+
+					<!-- Beauty Card -->
+					<div class="business-card">
+						<div class="business-image-container beauty">
+							<div class="image-gallery">
+								<!-- Image 1 -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-1" data-layer="beauty-img-1">
+										<img src="assets/beauty-1.jpg" alt="Beauty service" />
+									</div>
+								</div>
+								<!-- Image 3 -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-3" data-layer="beauty-img-3">
+										<img src="assets/beauty-3.jpg" alt="Beauty salon" />
+									</div>
+								</div>
+								<!-- Image 2 -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-2" data-layer="beauty-img-2">
+										<img src="assets/beauty-2.jpg" alt="Beauty treatment" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="business-card-content">
+							<h3 class="business-card-title">Beauty</h3>
+							<p class="business-card-description">Smart booking for beauty businesses — from salons to spas and laser clinics.</p>
+						</div>
+					</div>
+
+					<!-- Fitness Card -->
+					<div class="business-card">
+						<div class="business-image-container fitness">
+							<div class="image-gallery">
+								<!-- Image 1 -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-1" data-layer="fitness-img-1">
+										<img src="assets/fitness-1.jpg" alt="Fitness class" />
+									</div>
+								</div>
+								<!-- Image 2 (Note: Fitness had img-2 then img-3 in original DOM? Checking orig source...) -->
+								<!-- Orig source: fitness-1, fitness-2, fitness-3. -->
+								<!-- But for consistency with others: 1, 3, 2? Or stick to original order? -->
+								<!-- The CSS I wrote targets nth-child(2) as colspan 1-2. -->
+								<!-- For Fitness, let's look at previous CSS. -->
+								<!-- .fitness .gallery-image-3 was top right (tall?). -->
+								<!-- .fitness .gallery-image-1 top left. -->
+								<!-- .fitness .gallery-image-2 bottom left. -->
+								<!-- So if I want current layout to work: -->
+								<!-- Child 1 (Top Left) -> Img 1. -->
+								<!-- Child 2 (Right Span 2) -> Img 3. -->
+								<!-- Child 3 (Bottom Left) -> Img 2. -->
+								<!-- So order should be 1, 3, 2 to match grid. -->
+
+								<!-- WARNING: Original Fitness HTML (lines 378-386) was: -->
+								<!-- gallery-image-1 -->
+								<!-- gallery-image-2 -->
+								<!-- gallery-image-3 -->
+								<!-- My generic grid put Child 2 in the tall right column. -->
+								<!-- If Fitness Child 2 is 'gallery-image-2', it will be the tall one. -->
+								<!-- Was Fitness Image 2 the tall one? -->
+								<!-- Original CSS (lines 948-960): -->
+								<!-- fit-2: w143 h114 (small) -->
+								<!-- fit-3: w225 h240 (tall) -->
+								<!-- So fit-3 is the tall one. -->
+								<!-- So I MUST supply the DOM order: 1, 3, 2 for the generic grid rules to put 3 in the tall slot. -->
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-2" data-layer="fitness-img-2">
+										<img src="assets/fitness-2.jpg" alt="Fitness training" />
+									</div>
+								</div>
+
+								<div class="gallery-item">
+									<!-- <div class="shadow-layer shadow-layer-3"></div>
+									<div class="shadow-layer shadow-layer-2"></div>
+									<div class="shadow-layer shadow-layer-1"></div> -->
+									<div class="gallery-image gallery-image-3" data-layer="fitness-img-3">
+										<img src="assets/fitness-3.jpg" alt="Gym workout" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="business-card-content">
+							<h3 class="business-card-title">Fitness</h3>
+							<p class="business-card-description">Handle classes, trainers, and schedules seamlessly while keeping members engaged.</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ===================================
+             SECTION 8 - DEMO FORM
+             =================================== -->
+			<section class="demo-section" id="demo">
+				<div class="demo-content">
+					<div class="demo-header">
+						<p class="demo-label">Book a demo</p>
+						<h2 class="demo-title">Want to see how bookit works?</h2>
+					</div>
+					<form class="demo-form">
+						<div class="form-row">
+							<input type="text" class="form-input half" placeholder="First Name" required />
+							<input type="text" class="form-input half" placeholder="Last Name" required />
+						</div>
+						<input type="email" class="form-input" placeholder="Email Address" required />
+						<div class="form-radio-group">
+							<div class="form-radio">
+								<input type="radio" id="wellness" name="business-type" value="wellness" />
+								<label for="wellness">Health & Wellness</label>
+							</div>
+							<div class="form-radio">
+								<input type="radio" id="beauty" name="business-type" value="beauty" checked />
+								<label for="beauty">Beauty</label>
+							</div>
+							<div class="form-radio">
+								<input type="radio" id="fitness" name="business-type" value="fitness" />
+								<label for="fitness">Fitness</label>
+							</div>
+						</div>
+						<select class="form-select" required>
+							<option value="" disabled selected>Country</option>
+							<option value="ae">United Arab Emirates</option>
+							<option value="sa">Saudi Arabia</option>
+							<option value="eg">Egypt</option>
+							<option value="us">United States</option>
+							<option value="uk">United Kingdom</option>
+						</select>
+						<textarea class="form-textarea" placeholder="Please include any additional details so we can better tailor this demo for you."></textarea>
+						<button type="submit" class="btn-primary" style="width: 100%; margin-top: 16px">Submit</button>
+					</form>
+				</div>
+			</section>
+
+			<!-- ===================================
+             FOOTER
+             =================================== -->
+			<footer class="footer">
+				<div class="footer-content">
+					<div class="footer-logo">
+						<!-- Full Logo -->
+						<div class="logo-full" data-layer="footer-logo">
+							<svg width="80" height="35" viewBox="0 0 104 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<g clipPath="url(#clip0_79_4725)">
+									<path
+										d="M0 33.5712C0.234739 22.6302 0.234739 10.4238 0 0H6.29148C6.24501 4.36709 6.15087 8.96774 6.01027 13.4278H6.05674C7.4187 10.8456 9.71842 9.38955 12.3482 9.38955H12.4888C17.3719 9.38955 20.1423 13.9914 20.1423 22.1608C20.1423 30.3302 17.466 34.2742 12.4888 34.2742H12.4423C9.67195 34.2742 7.4187 32.9123 5.86966 30.3302H5.82319C5.91732 31.4097 5.9638 32.4905 6.01146 33.57H0V33.5712ZM9.57782 29.2506C12.3947 29.2506 13.9449 26.6208 13.9449 22.0202V21.5507C13.9449 17.0907 12.4423 14.3667 9.90669 14.3667C8.54473 14.3667 7.2769 15.2115 6.24501 16.8083C6.19853 19.6251 6.19853 24.837 6.19853 27.5133C7.23162 28.7335 8.21705 29.2506 9.57901 29.2506H9.57782Z"
+										fill="#790077"
+									/>
+									<path
+										d="M31.2705 9.39062H31.8806C38.2662 9.39062 41.6002 13.6636 41.6002 21.7388C41.6002 29.8141 38.2197 34.2753 31.8806 34.2753H31.2705C24.979 34.2753 21.645 29.8153 21.645 21.6924C21.645 13.5695 24.979 9.39062 31.2705 9.39062ZM35.5435 21.833V21.6924C35.5435 16.5281 34.2756 14.3678 31.647 14.3678C29.0184 14.3678 27.7494 16.5281 27.7494 21.6924V21.833C27.7494 27.139 29.0172 29.2517 31.6935 29.2517C34.3698 29.2517 35.5435 27.2332 35.5435 21.833Z"
+										fill="#790077"
+									/>
+									<path
+										d="M52.728 9.39062H53.3381C59.7237 9.39062 63.0577 13.6636 63.0577 21.7388C63.0577 29.8141 59.6772 34.2753 53.3381 34.2753H52.728C46.4365 34.2753 43.1025 29.8153 43.1025 21.6924C43.1025 13.5695 46.4365 9.39062 52.728 9.39062ZM56.9998 21.833V21.6924C56.9998 16.5281 55.732 14.3678 53.1034 14.3678C50.4748 14.3678 49.2069 16.5281 49.2069 21.6924V21.833C49.2069 27.139 50.4748 29.2517 53.151 29.2517C55.8273 29.2517 57.001 27.2332 57.001 21.833H56.9998Z"
+										fill="#790077"
+									/>
+									<path
+										d="M64.5603 33.5712C64.7485 22.6314 64.7485 10.4238 64.5603 0H70.8517C70.7576 6.01027 70.6635 11.5975 70.7111 18.2179H71.6978C74.6552 18.2179 75.8289 16.2923 75.8289 10.518V10.095H81.3221V10.518C81.3221 16.5282 79.6324 19.7681 76.3449 20.2841L76.0637 20.3305V20.6117C76.2519 25.8236 77.8474 28.3116 80.5237 28.3116C81.2279 28.3116 81.9786 28.171 82.4481 28.0304C82.4481 30.0025 82.4946 31.8804 82.6364 33.806C81.8845 34.0872 80.8049 34.2754 79.7718 34.2754C75.17 34.2754 72.7761 30.5661 72.2125 22.4432H70.7564C70.7564 25.7772 70.7564 30.3778 70.8506 33.5712H64.5591H64.5603Z"
+										fill="#790077"
+									/>
+									<path
+										d="M87.6373 7.58318C85.2899 7.58318 84.7263 6.9731 84.7263 4.10857V3.92031C84.7263 1.00931 85.2422 0.351562 87.5908 0.351562C89.9394 0.351562 90.5959 0.961645 90.5959 3.92031V4.10857C90.5959 6.9731 90.0323 7.58318 87.6384 7.58318H87.6373ZM84.5142 33.5713C84.6548 26.1061 84.6548 17.2325 84.5142 10.095H90.8056C90.6174 17.2313 90.6174 26.1061 90.8056 33.5713H84.5142Z"
+										fill="#790077"
+									/>
+									<path
+										d="M94.4222 33.5714C94.6105 27.9377 94.657 20.5655 94.657 14.8841H92.7314C92.6373 13.1944 92.5431 11.9731 92.4502 10.1416H94.657C94.6105 7.84071 94.5628 5.58745 94.5628 3.33301H100.808C100.761 5.39919 100.714 7.7001 100.667 10.1416H103.954C103.954 11.2212 103.954 13.2409 104 14.8841H100.666C100.62 21.1291 100.62 28.9231 100.807 33.5714H94.421H94.4222Z"
+										fill="#790077"
+									/>
+								</g>
+								<defs>
+									<clipPath id="clip0_79_4725">
+										<rect width="104" height="34.2754" fill="white" />
+									</clipPath>
+								</defs>
+							</svg>
+						</div>
+					</div>
+					<div class="footer-links-container">
+						<div class="footer-links-column">
+							<h4 class="footer-links-title">bookit Business</h4>
+							<ul class="footer-links">
+								<!-- <li><a href="/register">Business Registration</a></li> -->
+								<li  id="book-a-demo-link"><a href="#">Book a Demo</a></li>
+								<li><a href="https://apps.apple.com/eg/app/bookit-business/id6748218245">Download iOS App</a></li>
+								<li><a href="https://play.google.com/store/apps/details?id=com.appdevslabs.bookit">Download Android App</a></li>
+							</ul>
+						</div>
+						<div class="footer-links-column">
+							<h4 class="footer-links-title">bookit Client</h4>
+							<ul class="footer-links">
+								<li><a href="https://bookings.bookit-app.com">Client Portal</a></li>
+								<!-- <li><a href="#">Marketplace</a></li> -->
+							</ul>
+						</div>
+						<div class="footer-links-column">
+							<h4 class="footer-links-title">Other resources</h4>
+							<ul class="footer-links">
+								<li><a href="/support">Support</a></li>
+								<li><a href="/privacy-policy">Privacy Policy</a></li>
+								<li><a href="/terms-of-service">Terms of Service</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<p class="footer-copyright">© <span id="current-year"></span> bookit. All rights reserved</p>
+				<script>
+					document.getElementById('current-year').textContent = new Date().getFullYear();
+				</script>
+			</footer>
+		</div>
+		<script>
+			if (!enableForm){
+				document.getElementById("book-a-demo").style.display = "none";
+				document.getElementById("demo").style.display = "none";
+				document.getElementById("book-a-demo-link").style.display = "none";
+			}
+		</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+	<script src="script.js"></script>
+	</body>
+</html>

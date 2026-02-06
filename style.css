@@ -1491,3 +1491,16 @@ gap: 20px;
 		width: auto;
 	}
 }	
+
+@media (max-height: 768px){
+	.hand-phone-layer img {
+	    bottom: -70dvw;
+	}
+}
+
+
+@media (max-height: 600px){
+	.hand-phone-layer img {
+	    bottom: -90dvw;
+	}
+}

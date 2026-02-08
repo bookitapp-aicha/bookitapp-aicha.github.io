@@ -594,8 +594,14 @@ gap: 20px;
 	padding: 2% 3%;
 	background-color: var(--magenta-600);
 	border-radius: 100px;
-	margin-right: 16px;
-	margin-top: 15px;
+	/* margin-right: 16px; */
+	margin-top: 7px;
+}
+.bookit-badge svg{
+	
+    width: 140px;
+    height: 47px;
+
 }
 
 .bookit-badge span {

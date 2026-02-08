@@ -90,7 +90,7 @@ a {
 }
 
 ul {
-	list-style-position: inside;
+	/* list-style-position: inside; */
 }
 
 /* ===================================
@@ -314,6 +314,7 @@ ul {
 	line-height: 60px;
 	color: var(--magenta-600);
 	font-stretch: extra-condensed;
+	margin-bottom: 20px;
 }
 
 .hero-description {
@@ -512,18 +513,17 @@ ul {
 .pain-points-grid {
 	display: flex;
 	gap: 24px;
-	align-items: center;
 }
 
 .pain-point-item {
-	width: 288px;
-	height: 100px;
+	/* height: 100px; */
 	background-color: var(--lavender-100);
 	border-radius: 8px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	padding: 24px 16px;
+	flex: 1 1 0px;
 }
 
 .pain-point-item p {
@@ -693,10 +693,11 @@ gap: 20px;
 .features-grid {
 	display: flex;
 	gap: 24px;
+	width: 100%;
 }
 
 .feature-card {
-	width: 392px;
+	flex: 1 1 0;
 	padding: 32px 16px;
 	background-color: var(--neutral-white);
 	border: 2px solid var(--magenta-600);
@@ -778,7 +779,7 @@ gap: 20px;
 	display: flex;
 	gap: 104px;
 	align-items: center;
-	width: 1222px;
+	width: 100%;
 }
 
 .retention-title {
@@ -1146,6 +1147,7 @@ gap: 20px;
 	display: flex;
 	gap: 124px;
 	align-items: flex-start;
+	width: 100%;
 }
 
 .footer-logo {
@@ -1405,7 +1407,7 @@ gap: 20px;
 	}
 
 	.footer-links-container {
-		flex-direction: column;
+		/* flex-direction: column; */
 	}
 
 	.business-header {

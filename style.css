@@ -242,8 +242,8 @@ ul {
 .hand-phone-layer {
 	position: absolute;
 	width: 47dvw;
-	height: 88dvh;
-	top: -10dvh;
+	height: 88svh;
+	top: -10svh;
 	transform: translateX(-50%);
 	transform-origin: center;
 	z-index: 3;
@@ -267,7 +267,7 @@ ul {
 	/* width: 55.446px; */
 	/* height: 68.568px; */
 	left: 52dvw;
-	top: 16vh;
+	top: 16svh;
 	transform: rotate(-45deg);
 	width: 4dvw;
 	height: 9dvh;
@@ -275,9 +275,9 @@ ul {
 
 .star-2 {
 	width: 7dvw;
-	height: 18dvh;
+	height: 18svh;
 	left: 43dvw;
-	top: 20dvh;
+	top: 20svh;
 	transform: rotate(-45deg);
 }
 
@@ -285,7 +285,7 @@ ul {
 .hero-content {
 	position: relative;
 	left: var(--section-padding);
-	top: 35dvh;
+	top: 35svh;
 	width: 46%;
 	z-index: 10;
 	display: flex;
@@ -1499,8 +1499,15 @@ gap: 20px;
 }
 
 
-@media (max-height: 600px){
+@media (max-height: 650px){
 	.hand-phone-layer img {
-	    bottom: -90dvw;
+	    bottom: -60svh;
+	}
+}
+
+
+@media (max-height: 580px){
+	.hand-phone-layer img {
+	    bottom: -90svh;
 	}
 }

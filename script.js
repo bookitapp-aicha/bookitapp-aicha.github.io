@@ -1,4 +1,4 @@
-const target = document.querySelector('.retention-section');
+const target = document.querySelector('.header');
 
 document.addEventListener('scroll', () => {
     if (!target) return;
@@ -30,32 +30,43 @@ document.addEventListener("DOMContentLoaded", (event) => {
             headerCta.href = deeplink;
         }
     }
-		gsap.fromTo(".hero-content", {
+	gsap.fromTo(".header > *", {
+        y: -50,
         opacity: 0,
-			},{
-			opacity: 1,
-			duration: 0.3,
-			ease: "power3.out",
-			delay: 0
-			});
+    },{
+        y: 0,
+        opacity: 1,
+        duration: 0.4,
+        stagger: 0.2,
+				ease: "power3.out",
+    });
+
+    gsap.fromTo(".hero-content", {
+        opacity: 0,
+    },{
+        opacity: 1,
+        duration: 0.3,
+        ease: "power3.out",
+        delay: 0.3
+    });
     gsap.fromTo(".hero-content > div", {
         y: 100,
         opacity: 0,
         duration: 1.2,
         ease: "power3.out",
-			},{
-				y: 0,
-				opacity: 1,
-				duration: 1.2,
-				ease: "power3.out",
-				delay: 0,
-				stagger: 0.3
-			});
+    },{
+        y: 0,
+        opacity: 1,
+        duration: 1.2,
+        ease: "power3.out",
+        delay: 0.3,
+        stagger: 0.3
+    });
     gsap.to(".notifications-container", {
-			opacity: 1,
-			delay: 1,
-			duration: 0.3,
-		});
+        opacity: 1,
+        delay: 1.3,
+        duration: 0.3,
+    });
 
     gsap.from(".notification-card", {
         y: 50,
@@ -63,38 +74,38 @@ document.addEventListener("DOMContentLoaded", (event) => {
         duration: 0.8,
         stagger: 0.2,
         ease: "power2.out",
-        delay: 1.2
+        delay: 1.5
     });
 
     gsap.fromTo(".phone-frame", {
         opacity: 0,
-			},{
-			opacity: 1,
-			duration: 0.3,
-			ease: "power3.out",
-			delay: 0
-			});
+    },{
+        opacity: 1,
+        duration: 0.3,
+        ease: "power3.out",
+        delay: 0.3
+    });
     gsap.fromTo(".phone-frame > div", {
         y: 100,
         opacity: 0,
         duration: 1.2,
         ease: "power3.out",
-			},{
-				y: 0,
-				opacity: 1,
-				duration: 1.2,
-				ease: "power3.out",
-				delay: 0.4,
-				stagger: 0.4
-			});
+    },{
+        y: 0,
+        opacity: 1,
+        duration: 1.2,
+        ease: "power3.out",
+        delay: 0.7,
+        stagger: 0.4
+    });
     gsap.fromTo(".star-layer", {
-			rotate: '-70deg'
-		},{
-				opacity: 1,
-				duration: 0.8,
-				ease: "power3.out",
-				delay: 0,
-				rotate: '75deg',
-				stagger: 0.2
-			});
+        rotate: '-70deg'
+    },{
+        opacity: 1,
+        duration: 0.8,
+        ease: "power3.out",
+        delay: 0.3,
+        rotate: '75deg',
+        stagger: 0.2
+    });
 });

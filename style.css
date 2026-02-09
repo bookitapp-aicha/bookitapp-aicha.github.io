@@ -125,6 +125,7 @@ ul {
 	width: 75px;
 	height: auto;
 	position: relative;
+	opacity: 0;
 }
 
 .logo-full {
@@ -144,7 +145,7 @@ ul {
 	font-weight: 550;
 	font-size: 18px;
 	line-height: 24px;
-	transition: all 0.3s ease;
+	opacity: 0;
 }
 .star-layer{
 	opacity: 0;
@@ -241,20 +242,33 @@ ul {
 /* Hand with Phone - Layer for animation */
 .hand-phone-layer {
 	position: absolute;
-	width: 47dvw;
+	width: auto;
 	height: 88svh;
 	top: -10svh;
-	transform: translateX(-50%);
+	transform: translateX(-87%);
 	transform-origin: center;
 	z-index: 3;
 	pointer-events: none;
 	right: -22dvw;
 }
 
+/* Notification Cards - Each on own layer */
+.notifications-container {
+	position: absolute;
+	left: 54dvw;
+	top: calc(100dvh - 208px);
+	z-index: 10;
+	width: 50dvw;
+	height: 20dvh;
+	opacity: 0;
+	/* transform-style: preserve-3d; */
+	margin-top: calc(var(--scrollMultiplier) - var(--scrollMultiplier) * 4);
+}
+
 .hand-phone-layer img {
 	width: 100%;
 	height: 100%;
-	object-fit: contain;
+	/* margin-top: calc(var(--scrollMultiplier) - var(--scrollMultiplier) * 2); */
 }
 
 /* Decorative Stars - Each on own layer */
@@ -376,17 +390,6 @@ ul {
 .btn-text svg {
 	width: 24px;
 	height: 24px;
-}
-
-/* Notification Cards - Each on own layer */
-.notifications-container {
-	position: absolute;
-	left: 54dvw;
-	top: calc(100dvh - 208px);
-	z-index: 10;
-	width: 50dvw;
-	height: 20dvh;
-	opacity: 0;
 }
 
 .notification-card {
@@ -1494,6 +1497,7 @@ gap: 20px;
 		height: 100%;
 		top: 0px;
 		z-index: 0;
+		margin-top: calc(var(--scrollMultiplier) - var(--scrollMultiplier) * 4);
 	}
 	.footer-logo{
 		width: auto;

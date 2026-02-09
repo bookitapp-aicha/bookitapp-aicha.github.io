@@ -242,14 +242,14 @@ ul {
 /* Hand with Phone - Layer for animation */
 .hand-phone-layer {
 	position: absolute;
-	width: auto;
+	width: 47dvw;
 	height: 88svh;
 	top: -10svh;
-	transform: translateX(-87%);
+	transform: translateX(-50%);
 	transform-origin: center;
 	z-index: 3;
 	pointer-events: none;
-	right: -22dvw;
+	right: -27dvw;
 }
 
 /* Notification Cards - Each on own layer */
@@ -486,7 +486,10 @@ ul {
 	font-size: 22px;
 	color: #3f3f3f;
 }
-
+.hand-phone-layer img {
+	width: auto;
+	height: 100%;
+}
 /* ===================================
    SECTION 2 - PAIN POINTS
    =================================== */

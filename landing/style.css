@@ -187,7 +187,7 @@ ul {
 
 .hero {
 	position: relative;
-	height: 100dvh;
+	height: 100svh;
 	overflow: clip;
 	background-color: var(--neutral-white);
 }
@@ -210,9 +210,9 @@ ul {
 .phone-frame {
 	position: absolute;
 	right: 5dvw;
-	top: 23dvh;
+	top: 23svh;
 	width: 38dvw;
-	height: 80dvh;
+	height: 80svh;
 	border-radius: 1000px 1000px 0 0;
 	z-index: 2;
 	overflow: visible;
@@ -1251,8 +1251,8 @@ gap: 20px;
 
 @media (max-width: 1200px) {
 	.hero {
-		height: 100dvh;
-		min-height: 100dvh;
+		height: 100svh;
+		min-height: 100svh;
 		/* padding-bottom: 80px; */
 	}
 

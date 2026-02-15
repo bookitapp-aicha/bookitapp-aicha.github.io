@@ -497,6 +497,8 @@ ul {
 .pain-points-section {
 	position: relative;
 	padding: 92px var(--section-padding) 76px;
+	z-index: 2;
+	margin-top: calc(var(--scrollMultiplier) * 2);
 }
 
 .pain-points-content {
@@ -550,10 +552,9 @@ ul {
 	margin: auto;
 }
 .download-buttons-container{
-	
-display: flex;
-	
-gap: 20px;
+	position: absolute;
+	display: flex;
+	gap: 20px;
 }
 .download-buttons-layer img {
 	/* width: 100%; */
@@ -741,6 +742,19 @@ gap: 20px;
 .feature-icon img {
 	width: 35px;
 	height: 35px;
+}
+
+@keyframes rotate-infinite {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.feature-icon img[src*="icon-business.svg"] {
+	animation: rotate-infinite 10s linear infinite;
 }
 
 .feature-content {
@@ -1525,4 +1539,10 @@ gap: 20px;
 	.hand-phone-layer img {
 	    bottom: -90svh;
 	}
+}
+
+.download-buttons-layer	{
+	position: relative;
+	z-index:999;
+	margin-top: calc(var(--scrollMultiplier) - var(--scrollMultiplier) * 4);
 }

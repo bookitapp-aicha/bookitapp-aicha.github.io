@@ -27,7 +27,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
     if (deeplink && deeplink.trim() !== '') {
         const headerCta = document.querySelector('.header-cta');
         if (headerCta) {
-            headerCta.href = deeplink;
+            headerCta.href = deeplink + '/login';
+        }
+
+				 const signup = document.querySelector('.signup');
+        if (signup) {
+            signup.href = deeplink + '/signup';
         }
     }
 	gsap.fromTo(".header > *", {

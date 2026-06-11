@@ -147,7 +147,7 @@ ul {
 	line-height: 24px;
 	opacity: 0;
 }
-.star-layer{
+.star-layer {
 	opacity: 0;
 }
 .header-cta:hover {
@@ -403,7 +403,6 @@ ul {
 	-webkit-backdrop-filter: blur(22.5px);
 	border-radius: 24px;
 	width: 519px;
-
 }
 
 .notification-card-1 {
@@ -551,7 +550,7 @@ ul {
 	width: 288px;
 	margin: auto;
 }
-.download-buttons-container{
+.download-buttons-container {
 	position: absolute;
 	display: flex;
 	gap: 20px;
@@ -604,11 +603,9 @@ ul {
 	/* margin-right: 16px; */
 	margin-top: 7px;
 }
-.bookit-badge svg{
-	
-    width: 140px;
-    height: 47px;
-
+.bookit-badge svg {
+	width: 140px;
+	height: 47px;
 }
 
 .bookit-badge span {
@@ -1278,7 +1275,6 @@ ul {
 		padding: 160px 60px 60px;
 	}
 
-
 	.pain-points-grid {
 		flex-wrap: wrap;
 		justify-content: center;
@@ -1343,7 +1339,6 @@ ul {
 		margin-right: 0;
 		margin-bottom: 24px;
 	}
-
 }
 
 @media (max-width: 768px) {
@@ -1459,43 +1454,43 @@ ul {
 	.star-layer {
 		display: none;
 	} */
-	 .star-layer {
+	.star-layer {
 		display: none;
 	}
-	.hero{
+	.hero {
 		overflow-y: visible;
 	}
 	.hero-content {
-			position: relative;
-			left: auto;
-			top: auto;
-			width: 100%;
-			padding: 120px 30px 30px;
+		position: relative;
+		left: auto;
+		top: auto;
+		width: 100%;
+		padding: 120px 30px 30px;
 	}
-	 .solution-header {
-    width: auto;
-	 }
-	 .phone-frame-bg{
+	.solution-header {
+		width: auto;
+	}
+	.phone-frame-bg {
 		display: none;
-	 }
-	 .hand-phone-layer {
-			width: 120%;
-			height: 100%;
-			right: auto;
-			left: -27dvw;
-			top: auto;
-			bottom: auto;
-			transform: none;
-			vertical-align: bottom;
+	}
+	.hand-phone-layer {
+		width: 120%;
+		height: 100%;
+		right: auto;
+		left: -27dvw;
+		top: auto;
+		bottom: auto;
+		transform: none;
+		vertical-align: bottom;
 	}
 	.hand-phone-layer img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    rotate: 16deg;
-    bottom: -50dvw;
-    position: absolute;
-}
+		width: 100%;
+		height: auto;
+		object-fit: contain;
+		rotate: 16deg;
+		bottom: -50dvw;
+		position: absolute;
+	}
 	.notifications-container {
 		left: 54dvw;
 		top: 81dvh;
@@ -1505,9 +1500,9 @@ ul {
 		display: none;
 	}
 	.demo-title {
-			width: auto;
+		width: auto;
 	}
-	.phone-frame{
+	.phone-frame {
 		right: auto;
 		left: 0px;
 		width: 100%;
@@ -1516,33 +1511,43 @@ ul {
 		z-index: 0;
 		margin-top: calc(var(--scrollMultiplier) - var(--scrollMultiplier) * 2);
 	}
-	.footer-logo{
+	.footer-logo {
 		width: auto;
 	}
-}	
+}
 
-@media (max-height: 768px){
+@media (max-height: 768px) {
 	.hand-phone-layer img {
-	    bottom: -70dvw;
+		bottom: -70dvw;
 	}
 }
 
-
-@media (max-height: 650px){
+@media (max-height: 650px) {
 	.hand-phone-layer img {
-	    bottom: -60svh;
+		bottom: -60svh;
 	}
 }
 
-
-@media (max-height: 580px){
+@media (max-height: 580px) {
 	.hand-phone-layer img {
-	    bottom: -90svh;
+		bottom: -90svh;
 	}
 }
 
-.download-buttons-layer	{
+.download-buttons-layer {
 	position: relative;
-	z-index:999;
+	z-index: 999;
 	margin-top: calc(var(--scrollMultiplier) - var(--scrollMultiplier) * 4);
+}
+
+.pain-points-content .section-title {
+}
+.pain-points-grid {
+	display: flex;
+	gap: 24px;
+	align-items: center;
+}
+
+.pain-points-grid .feature-card {
+	width: 270px;
 }

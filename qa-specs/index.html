@@ -556,12 +556,13 @@ tbody td code { font-size: 12px; }
 .sevchip--2 { background: var(--sev2-soft); color: var(--sev2); border: 1px solid var(--sev2); }
 .sevhead h3 { margin: 0; font-size: 17px; }
 .risklist { counter-reset: risk; list-style: none; padding: 0; max-width: 70ch; }
+/* Numeral is absolutely positioned, not a grid track: a grid container turns
+   every inline child (<strong>, <code>, <em>) into its own grid item, which
+   scatters the prose across the columns. */
 .risklist li {
   counter-increment: risk;
-  display: grid;
-  grid-template-columns: 26px 1fr;
-  gap: 12px;
-  padding: 11px 0;
+  position: relative;
+  padding: 11px 0 11px 38px;
   border-bottom: 1px solid var(--rule);
   margin: 0;
   font-size: 15.5px;
@@ -570,10 +571,13 @@ tbody td code { font-size: 12px; }
 }
 .risklist li::before {
   content: counter(risk, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 11px;
   font-family: var(--font-mono);
   font-size: 11.5px;
+  line-height: 23px;
   color: var(--ink-3);
-  padding-top: 4px;
 }
 .risklist li:last-child { border-bottom: 0; }
 
@@ -705,21 +709,25 @@ tbody td code { font-size: 12px; }
 
 /* ── Habit list ────────────────────────────────────────────── */
 .habits { list-style: none; padding: 0; counter-reset: hab; max-width: 70ch; }
+/* Same absolute-numeral pattern as .risklist — see the note there. */
 .habits li {
   counter-increment: hab;
-  display: grid;
-  grid-template-columns: 30px 1fr;
-  gap: 12px;
-  padding: 13px 0;
+  position: relative;
+  padding: 13px 0 13px 42px;
   border-bottom: 1px solid var(--rule);
   font-size: 15.5px;
+  line-height: 1.5;
   color: var(--ink-2);
   margin: 0;
 }
 .habits li::before {
   content: counter(hab);
+  position: absolute;
+  left: 0;
+  top: 13px;
   font-family: var(--font-mono);
   font-size: 15px;
+  line-height: 23px;
   font-weight: 700;
   color: var(--accent);
 }
@@ -766,7 +774,8 @@ tbody td code { font-size: 12px; }
   .main { padding: 0 18px 70px; }
   .stamp__cell { flex-basis: 100%; border-right: 0; border-bottom: 1px solid var(--rule); }
   .stamp__cell:last-child { border-bottom: 0; }
-  .risklist li, .habits li { grid-template-columns: 22px 1fr; gap: 9px; }
+  .risklist li { padding-left: 31px; }
+  .habits li { padding-left: 33px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,536 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Production web hosting stack for bookit-app.com and www.bookit-app.com.
+  Provisions a Graviton EC2 instance (Nginx + PHP-FPM) in eu-north-1 restricted
+  to CloudFront origin-facing IPs, an S3 deployment artifact bucket, and a
+  CloudFront distribution with ACM TLS and security headers.
+
+Metadata:
+  AWSToolsMetrics:
+    AWSAgentToolkit: aws-cloudformation@3
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: prod
+    AllowedValues:
+      - prod
+    Description: Deployment environment identifier.
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-05ffba2669fd34b81
+    Description: Existing VPC in eu-north-1.
+  PublicSubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-093b57bef18e0d19a
+    Description: Public subnet in eu-north-1 for the web origin instance.
+  AmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64
+    Description: Latest Amazon Linux 2023 ARM64 AMI ID from SSM Parameter Store.
+  InstanceType:
+    Type: String
+    Default: t4g.micro
+    AllowedValues:
+      - t4g.nano
+      - t4g.micro
+      - t4g.small
+    Description: Graviton ARM64 instance type for Nginx + PHP-FPM.
+  HostedZoneId:
+    Type: String
+    Default: Z06421913CQ4E97W7RL5B
+    Description: Route 53 Hosted Zone ID for bookit-app.com.
+  AcmCertificateArn:
+    Type: String
+    Default: arn:aws:acm:us-east-1:524522255968:certificate/755dff7e-7dc3-454b-816a-c1272b7224a2
+    Description: Issued ACM wildcard certificate ARN in us-east-1 for bookit-app.com.
+  CloudFrontPrefixListId:
+    Type: String
+    Default: pl-fab65393
+    Description: AWS-managed prefix list for CloudFront origin-facing servers in eu-north-1.
+  BrevoSsmParameterName:
+    Type: String
+    Default: /prod/brevo/api_key
+    Description: SSM Parameter Store path holding the Brevo API key.
+
+Resources:
+  WebsiteArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Stores versioned website release archives pulled by the EC2 web server via SSM.
+        must: Keep private with PublicAccessBlock and encryption enabled.
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-artifacts-${AWS::AccountId}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Project
+          Value: bookit-website
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  WebsiteArtifactBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Enforces TLS in transit for all requests to the artifact bucket.
+        must: Deny any request where aws:SecureTransport is false.
+    Properties:
+      Bucket: !Ref WebsiteArtifactBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !GetAtt WebsiteArtifactBucket.Arn
+              - !Sub '${WebsiteArtifactBucket.Arn}/*'
+            Condition:
+              Bool:
+                'aws:SecureTransport': 'false'
+
+  WebsiteEC2Role:
+    Type: AWS::IAM::Role
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Allows SSM management, reading the Brevo API key from SSM, and pulling site artifacts from S3.
+        must: Scope S3 and SSM permissions to the specific bucket and parameter ARNs.
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore'
+      Policies:
+        - PolicyName: BookitWebsiteOriginAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: ReadBrevoApiKeyFromSSM
+                Effect: Allow
+                Action:
+                  - 'ssm:GetParameter'
+                Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${BrevoSsmParameterName}'
+              - Sid: DecryptSsmParameter
+                Effect: Allow
+                Action:
+                  - 'kms:Decrypt'
+                Resource: '*'
+                Condition:
+                  StringEquals:
+                    'kms:ViaService': !Sub 'ssm.${AWS::Region}.amazonaws.com'
+              - Sid: ReadWebsiteArtifacts
+                Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:ListBucket'
+                Resource:
+                  - !GetAtt WebsiteArtifactBucket.Arn
+                  - !Sub '${WebsiteArtifactBucket.Arn}/*'
+      Tags:
+        - Key: Project
+          Value: bookit-website
+
+  WebsiteInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref WebsiteEC2Role
+
+  WebsiteOriginSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Restricts inbound HTTP traffic on port 80 strictly to CloudFront edge locations.
+        must: Never open 0.0.0.0/0 or port 22; access is via SSM Session Manager and CloudFront only.
+    Properties:
+      GroupDescription: Allow HTTP from CloudFront origin-facing prefix list only (SSM managed, no SSH)
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourcePrefixListId: !Ref CloudFrontPrefixListId
+          Description: Allow HTTP from CloudFront edge servers
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow outbound HTTPS/DNS/package updates and Brevo API calls
+      Tags:
+        - Key: Name
+          Value: !Sub '${AWS::StackName}-origin-sg'
+        - Key: Project
+          Value: bookit-website
+
+  WebsiteLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Configures AL2023 Graviton instance with IMDSv2 required, standard T4g credits, and encrypted GP3 storage.
+        must: Keep HttpTokens required and CreditSpecification standard.
+    Properties:
+      LaunchTemplateName: !Sub '${AWS::StackName}-lt'
+      LaunchTemplateData:
+        ImageId: !Ref AmiId
+        InstanceType: !Ref InstanceType
+        CreditSpecification:
+          CpuCredits: standard
+        IamInstanceProfile:
+          Arn: !GetAtt WebsiteInstanceProfile.Arn
+        MetadataOptions:
+          HttpEndpoint: enabled
+          HttpTokens: required
+          HttpPutResponseHopLimit: 1
+        Monitoring:
+          Enabled: true
+        BlockDeviceMappings:
+          - DeviceName: /dev/xvda
+            Ebs:
+              VolumeSize: 20
+              VolumeType: gp3
+              Encrypted: true
+              DeleteOnTermination: true
+        NetworkInterfaces:
+          - DeviceIndex: 0
+            AssociatePublicIpAddress: true
+            SubnetId: !Ref PublicSubnetId
+            Groups:
+              - !Ref WebsiteOriginSecurityGroup
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: bookit-website-prod
+              - Key: Project
+                Value: bookit-website
+              - Key: Environment
+                Value: !Ref EnvironmentName
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            set -euxo pipefail
+
+            dnf update -y
+            dnf install -y nginx php-fpm php-cli php-curl php-mbstring php-json php-xml tar gzip jq awscli
+
+            mkdir -p /var/www/bookit /etc/bookit /var/log/bookit-support
+            chown root:nginx /etc/bookit
+            chown -R nginx:nginx /var/log/bookit-support
+            chmod 0750 /etc/bookit /var/log/bookit-support
+
+            # Fetch Brevo API key from SSM Parameter Store at boot
+            aws ssm get-parameter \
+              --region "${AWS::Region}" \
+              --name "${BrevoSsmParameterName}" \
+              --with-decryption \
+              --query 'Parameter.Value' \
+              --output text > /etc/bookit/brevo_api_key
+            chown root:apache /etc/bookit/brevo_api_key || chown root:nginx /etc/bookit/brevo_api_key
+            chmod 0640 /etc/bookit/brevo_api_key
+
+            # Configure PHP-FPM pool to run as nginx:nginx
+            sed -i 's/^user = .*/user = nginx/' /etc/php-fpm.d/www.conf
+            sed -i 's/^group = .*/group = nginx/' /etc/php-fpm.d/www.conf
+            sed -i 's/^;listen.owner = .*/listen.owner = nginx/' /etc/php-fpm.d/www.conf
+            sed -i 's/^;listen.group = .*/listen.group = nginx/' /etc/php-fpm.d/www.conf
+            chown root:nginx /etc/bookit/brevo_api_key
+
+            cat > /etc/nginx/conf.d/bookit.conf <<'NGINX_EOF'
+            server {
+                listen 80 default_server;
+                listen [::]:80 default_server;
+                server_name bookit-app.com www.bookit-app.com origin-web.bookit-app.com _;
+
+                root /var/www/bookit;
+                index index.html index.htm;
+
+                client_max_body_size 2m;
+                server_tokens off;
+
+                # Block access to hidden files, git metadata, markdown docs, and infra templates
+                location ~ /\.(?!well-known) {
+                    deny all;
+                    return 404;
+                }
+                location ~* ^/(infra|AGENTS\.md|CLAUDE\.md|HANDOFF-support-form\.md|README\.md)$ {
+                    deny all;
+                    return 404;
+                }
+
+                # Health check endpoint
+                location = /healthz {
+                    access_log off;
+                    default_type text/plain;
+                    return 200 'ok';
+                }
+
+                # Only allow executing /support-submit.php via PHP-FPM
+                location = /support-submit.php {
+                    include fastcgi_params;
+                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    fastcgi_pass unix:/run/php-fpm/www.sock;
+                    fastcgi_read_timeout 15s;
+                }
+
+                # Deny execution of any other .php files
+                location ~ \.php$ {
+                    return 404;
+                }
+
+                # Extensionless clean URLs (matching GitHub Pages behavior, e.g., /support -> /support.html)
+                location / {
+                    try_files $uri $uri.html $uri/ =404;
+                }
+            }
+            NGINX_EOF
+
+            # Disable default server block in nginx.conf if present so conf.d/bookit.conf owns default_server
+            python3 - <<'PY_EOF'
+            p = '/etc/nginx/nginx.conf'
+            with open(p) as f:
+                s = f.read()
+            marker = '    server {\n        listen       80;\n        listen       [::]:80;\n        server_name  _;\n        root         /usr/share/nginx/html;\n\n        # Load configuration files for the default server block.\n        include /etc/nginx/default.d/*.conf;\n\n        error_page 404 /404.html;\n        location = /404.html {\n        }\n\n        error_page 500 502 503 504 /50x.html;\n        location = /50x.html {\n        }\n    }'
+            if marker in s:
+                s = s.replace(marker, '    # default server moved to /etc/nginx/conf.d/bookit.conf')
+                with open(p, 'w') as f:
+                    f.write(s)
+            PY_EOF
+
+            echo "<h1>Bookit Web Origin Ready</h1>" > /var/www/bookit/index.html
+            chown -R nginx:nginx /var/www/bookit
+
+            systemctl enable --now php-fpm
+            systemctl enable --now nginx
+
+  WebsiteEC2Instance:
+    Type: AWS::EC2::Instance
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Runs Nginx and PHP-FPM for bookit-app.com static pages and /support-submit.php.
+        must: Remain managed via LaunchTemplate with SSM access.
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref WebsiteLaunchTemplate
+        Version: !GetAtt WebsiteLaunchTemplate.LatestVersionNumber
+
+  WebsiteEIP:
+    Type: AWS::EC2::EIP
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Provides a static public IPv4 address for the origin DNS record.
+        must: Remain associated with WebsiteEC2Instance.
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref WebsiteEC2Instance
+      Tags:
+        - Key: Name
+          Value: bookit-website-prod-eip
+        - Key: Project
+          Value: bookit-website
+
+  OriginDnsRecord:
+    Type: AWS::Route53::RecordSet
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Provides a stable DNS hostname for CloudFront to reach the EC2 origin.
+        must: Point to WebsiteEIP.
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: origin-web.bookit-app.com.
+      Type: A
+      TTL: '60'
+      ResourceRecords:
+        - !Ref WebsiteEIP
+
+  WebsiteCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    DependsOn: OriginDnsRecord
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Serves bookit-app.com and www.bookit-app.com globally over HTTPS and routes /support-submit.php to PHP-FPM.
+        must: Enforce redirect-to-https and bypass caching on /support-submit.php.
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: Bookit Marketing Website and PHP Support Form (bookit-app.com)
+        HttpVersion: http2and3
+        IPV6Enabled: true
+        PriceClass: PriceClass_100
+        DefaultRootObject: index.html
+        Aliases:
+          - bookit-app.com
+          - www.bookit-app.com
+        Origins:
+          - Id: BookitWebsiteEC2Origin
+            DomainName: origin-web.bookit-app.com
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
+              OriginKeepaliveTimeout: 30
+              OriginReadTimeout: 30
+        DefaultCacheBehavior:
+          TargetOriginId: BookitWebsiteEC2Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          # Managed CachingOptimized policy
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          # Managed AllViewer origin request policy so Host header reaches Nginx
+          OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3
+          # Managed SecurityHeadersPolicy
+          ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03
+        CacheBehaviors:
+          - PathPattern: /support-submit.php
+            TargetOriginId: BookitWebsiteEC2Origin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
+            CachedMethods:
+              - GET
+              - HEAD
+            Compress: true
+            # Managed CachingDisabled policy
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+            # Managed AllViewer origin request policy
+            OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3
+            ResponseHeadersPolicyId: 67f7725c-6f97-4210-82d7-5512b31e9d03
+        ViewerCertificate:
+          AcmCertificateArn: !Ref AcmCertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+      Tags:
+        - Key: Project
+          Value: bookit-website
+        - Key: Environment
+          Value: !Ref EnvironmentName
+
+  GitHubOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Enables keyless OIDC authentication from GitHub Actions workflows.
+        must: Restrict audience to sts.amazonaws.com.
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - 6938fd4d98bab03faadb97b34396831e3780aea1
+      Tags:
+        - Key: Project
+          Value: bookit-website
+
+  GitHubActionsDeployRole:
+    Type: AWS::IAM::Role
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Assumed by GitHub Actions on pushes to main to upload the site bundle, trigger SSM deploy, and invalidate CloudFront.
+        must: Restrict sub claim strictly to repo:bookitapp-aicha/bookitapp-aicha.github.io:ref:refs/heads/main.
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-github-deploy'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOIDCProvider
+            Action: 'sts:AssumeRoleWithWebIdentity'
+            Condition:
+              StringEquals:
+                'token.actions.githubusercontent.com:aud': 'sts.amazonaws.com'
+                'token.actions.githubusercontent.com:sub': 'repo:bookitapp-aicha/bookitapp-aicha.github.io:ref:refs/heads/main'
+      Policies:
+        - PolicyName: BookitWebsiteGitHubDeployPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: DescribeWebsiteStack
+                Effect: Allow
+                Action:
+                  - 'cloudformation:DescribeStacks'
+                Resource: !Ref 'AWS::StackId'
+              - Sid: UploadReleaseBundleToS3
+                Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                  - 's3:GetObject'
+                  - 's3:ListBucket'
+                Resource:
+                  - !GetAtt WebsiteArtifactBucket.Arn
+                  - !Sub '${WebsiteArtifactBucket.Arn}/*'
+              - Sid: RunSsmDeployCommandOnWebInstance
+                Effect: Allow
+                Action:
+                  - 'ssm:SendCommand'
+                Resource:
+                  - !Sub 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/${WebsiteEC2Instance}'
+                  - !Sub 'arn:aws:ssm:${AWS::Region}::document/AWS-RunShellScript'
+              - Sid: CheckSsmCommandStatus
+                Effect: Allow
+                Action:
+                  - 'ssm:GetCommandInvocation'
+                  - 'ssm:ListCommandInvocations'
+                Resource: '*'
+              - Sid: InvalidateWebsiteCloudFront
+                Effect: Allow
+                Action:
+                  - 'cloudfront:CreateInvalidation'
+                  - 'cloudfront:GetInvalidation'
+                Resource: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${WebsiteCloudFrontDistribution}'
+      Tags:
+        - Key: Project
+          Value: bookit-website
+
+Outputs:
+  InstanceId:
+    Description: EC2 Instance ID for bookit-website-prod
+    Value: !Ref WebsiteEC2Instance
+  OriginElasticIp:
+    Description: Static Elastic IP of the EC2 origin
+    Value: !Ref WebsiteEIP
+  ArtifactBucketName:
+    Description: S3 Bucket for deploying website bundles
+    Value: !Ref WebsiteArtifactBucket
+  CloudFrontDistributionId:
+    Description: CloudFront Distribution ID
+    Value: !Ref WebsiteCloudFrontDistribution
+  CloudFrontDomainName:
+    Description: CloudFront Distribution Domain Name
+    Value: !GetAtt WebsiteCloudFrontDistribution.DomainName
+  GitHubActionsDeployRoleArn:
+    Description: IAM Role ARN for GitHub Actions OIDC auto-deployment
+    Value: !GetAtt GitHubActionsDeployRole.Arn
+

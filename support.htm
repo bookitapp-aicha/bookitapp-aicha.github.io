@@ -5,10 +5,21 @@
   data-wf-page="6879f1ebdb0a0682f8e2af3d"
   data-wf-site="684faabdf3591897e2f98f58"
   data-wf-status="1"
-  class="w-mod-js wf-rubik-n3-active wf-rubik-n4-active wf-rubik-n5-active wf-rubik-n6-active wf-rubik-n7-active wf-rubik-n8-active wf-rubik-n9-active wf-active"
+  class="w-mod-js wf-rubik-n9-active wf-rubik-n7-active wf-rubik-n3-active wf-rubik-n6-active wf-rubik-n5-active wf-rubik-n8-active wf-rubik-n4-active wf-active"
 >
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body {
+        transition: opacity ease-in 0.2s;
+      }
+      body[unresolved] {
+        opacity: 0;
+        display: block;
+        overflow: hidden;
+        position: relative;
+      }
+    </style>
     <style>
       .wf-force-outline-none[tabindex="-1"]:focus {
         outline: none;
@@ -20,7 +31,7 @@
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta content="Webflow" name="generator" />
     <link
-      href="./bookit_files/bookitapp.webflow.shared.3a7e07725.css"
+      href="./bookit_files/bookitapp.webflow.shared.d39ddaaa1.css"
       rel="stylesheet"
       type="text/css"
     />
@@ -30,6 +41,7 @@
       rel="preconnect"
       crossorigin="anonymous"
     />
+    <script async="" src="./bookit_files/fbevents.js"></script>
     <script src="./bookit_files/webfont.js" type="text/javascript"></script>
     <link rel="stylesheet" href="./bookit_files/css" media="all" />
     <script type="text/javascript">
@@ -56,7 +68,42 @@
       href="https://cdn.prod.website-files.com/684faabdf3591897e2f98f58/684ff6bb6bfd598b914cc816_web%20clip%20256px.png"
       rel="apple-touch-icon"
     />
-    <script src="./bookit_files/api.js"></script>
+    <!-- Meta Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js",
+      );
+      fbq("init", "1366842031855811");
+      fbq("track", "PageView");
+    </script>
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=1366842031855811&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
     <script src="./js/remove-webflow-badge.js"></script>
     <style type="text/css">
       /* Copyright 2014-present Evernote Corporation. All rights reserved. */
@@ -247,8 +294,42 @@
       }
     </style>
   </head>
+  <script>
+    !(function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod
+          ? n.callMethod.apply(n, arguments)
+          : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = "2.0";
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(
+      window,
+      document,
+      "script",
+      "https://connect.facebook.net/en_US/fbevents.js",
+    );
+    fbq("init", "1366842031855811");
+    fbq("track", "PageView");
+  </script>
+  <noscript
+    ><img
+      height="1"
+      width="1"
+      style="display: none"
+      src="https://www.facebook.com/tr?id=1366842031855811&ev=PageView&noscript=1"
+  /></noscript>
   <body>
-    <div class="logo">
+    <div class="logo-left-align">
       <img
         src="./bookit_files/684fb131f26a51a3c920a93d_bookit-en-logo-black.svg"
         loading="lazy"
@@ -258,184 +339,74 @@
     </div>
     <div class="help-center">
       <div class="columns-2 w-row">
-        <div class="w-col w-col-6">
+        <div class="hl-subhl-left-column w-col w-col-6">
           <div>
             <h1 class="heading-6">Help Center</h1>
             <p class="paragraph-3">
               We’re here with the guidance you need to bring your business to
-              life.
+              life.</br>
+							For urgent support, please contact: <a href="tel:+201157111401" style="    color: #790077;">+201157111401</a> 
             </p>
           </div>
         </div>
         <div class="w-col w-col-6">
-          <div>
-            <div class="columns-3 w-row">
-              <div class="column-8 w-col w-col-6">
-                <div class="w-form">
-                  <form
-                    id="email-form-2"
-                    name="email-form-2"
-                    data-name="Email Form 2"
-                    method="get"
-                    data-wf-page-id="6879f1ebdb0a0682f8e2af3d"
-                    data-wf-element-id="4fa357d5-d2d6-b98f-6c99-f3744b39525d"
-                    data-turnstile-sitekey="0x4AAAAAAAQTptj2So4dx43e"
-                    aria-label="Email Form 2"
-                  >
-                    <label for="name-2" class="field-label-dark"
-                      >First Name</label
-                    ><input
-                      class="text-field w-input"
-                      maxlength="256"
-                      name="name-2"
-                      data-name="Name 2"
-                      placeholder=""
-                      type="text"
-                      id="name-2"
-                    />
-                    <div>
-                      <div>
-                        <template shadowrootmode="closed"
-                          ><iframe
-                            src="https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/if/ov2/av0/rcv/3o1us/0x4AAAAAAAQTptj2So4dx43e/auto/fbE/new/normal/auto/"
-                            allow="cross-origin-isolated; fullscreen; autoplay"
-                            sandbox="allow-same-origin allow-scripts allow-popups"
-                            id="cf-chl-widget-3o1us"
-                            tabindex="-1"
-                            title="Widget containing a Cloudflare security challenge"
-                            style="
-                              border: none;
-                              overflow: hidden;
-                              width: 0px;
-                              height: 0px;
-                              position: absolute;
-                              visibility: hidden;
-                            "
-                            aria-hidden="true"
-                          ></iframe></template
-                        ><input
-                          type="hidden"
-                          name="cf-turnstile-response"
-                          id="cf-chl-widget-3o1us_response"
-                          value="0.umxdYdcDlf1v1CjrYH0IZ2AWom5ai3X01UC8Ar9SXrzwBJ-XxFBQGzIxEoykCJAn_PmvxtlU2APlVj_MVOrhjhWlKpINcKJBr_6fTUja5-af3Mm9hZfJd4Re2os57Ho0IpMQohHlNob2n5MEf9h1Wo8Wwt5-mwqxj4j0dIdWezD7kmy6NY5RqKXa_CUxi8faGHj-Llh-2pMae78538Zvcog_KO8lIqz7Nk86EkJdApe1QQKFJNkbJ4v8LhGGK_jsMric5zQCQ4sQYamGf1JHSemHQbekEH9fbRnOW8kYrc2qDn4sBG2PioUY4y25hoQ6fUTE1ls1c7XWi6nio8ejkJYvyhbd1LJeqB5b7Ea_mLpJDHKO7UkNZzQ3yeUFUOzKHPYFvkUTBIIf17T5-x0K4x0ejgXS7kjdh_rx93rsTMMxODu1LZmH3UuxjDioRfMEdc3Xu14i-ln0fnx3AVTPx8VMHZSNYu9_Z2B6_n20jtBvTTPv9VMW3uJqzMzhb1IMnnGVOLGpgxnGHH7NULUb_QVePK9ReZ-WH6SgMZ5x9lVnvQHec91S2s3HpXb7zX5NXK91mYhXOcQeTCEYCAWeL_1TU8X71phRcXZ3UQ3XblLWFKuc-VXCUgp5T0bfkXVUDkEYUQNd7uZttNdduOxhiO2RTufK95OTFbTLKMHvrloEujrnlf8YDONGM8ZCDQwpyJG9bEY8nIIxiJ_ddtdEKq2sgkz9DbeINbyC95Qn8z5jJUph1eyr1D9tjD_qgZ2bBO0b0F7qiO-3VtiBvrP0HWviNPY5RZX866Gx_CaEbaiqSoxhuQWvZlFB7rH8CuY3_1xtkkgq9P1zKsBj4oYdi6LzukiEzWYwgeJVB-iZTOGtrlrsubZ6OZk5Ix0hHI-7OHVX12p0cPVq7MMDhw9wJOrF3emygcaeuzreTz0jeAg.5N02MCFvx-Qwh69LF_dPKw.15042570c1449c1d9aba7bc8909e0e7a34d1e7165c6c978f7e6f776898cb90bc"
-                        />
-                      </div>
-                    </div>
-                  </form>
-                  <div
-                    class="w-form-done"
-                    tabindex="-1"
-                    role="region"
-                    aria-label="Email Form 2 success"
-                  >
-                    <div>Thank you! Your submission has been received!</div>
-                  </div>
-                  <div
-                    class="w-form-fail"
-                    tabindex="-1"
-                    role="region"
-                    aria-label="Email Form 2 failure"
-                  >
-                    <div>
-                      Oops! Something went wrong while submitting the form.
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="column-9 w-col w-col-6">
-                <div class="w-form">
-                  <form
-                    id="email-form-2"
-                    name="email-form-2"
-                    data-name="Email Form 2"
-                    method="get"
-                    data-wf-page-id="6879f1ebdb0a0682f8e2af3d"
-                    data-wf-element-id="e66dcd46-3cba-52d7-56d5-5dcd14ca6a22"
-                    data-turnstile-sitekey="0x4AAAAAAAQTptj2So4dx43e"
-                    aria-label="Email Form 2"
-                  >
-                    <label for="name" class="field-label-dark">Last Name</label
-                    ><input
-                      class="text-field w-input"
-                      maxlength="256"
-                      name="name-2"
-                      data-name="Name 2"
-                      placeholder=""
-                      type="text"
-                      id="name-2"
-                    />
-                    <div>
-                      <div>
-                        <template shadowrootmode="closed"
-                          ><iframe
-                            src="https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/if/ov2/av0/rcv/3r4x4/0x4AAAAAAAQTptj2So4dx43e/auto/fbE/new/normal/auto/"
-                            allow="cross-origin-isolated; fullscreen; autoplay"
-                            sandbox="allow-same-origin allow-scripts allow-popups"
-                            id="cf-chl-widget-3r4x4"
-                            tabindex="-1"
-                            title="Widget containing a Cloudflare security challenge"
-                            style="
-                              border: none;
-                              overflow: hidden;
-                              width: 0px;
-                              height: 0px;
-                              position: absolute;
-                              visibility: hidden;
-                            "
-                            aria-hidden="true"
-                          ></iframe></template
-                        ><input
-                          type="hidden"
-                          name="cf-turnstile-response"
-                          id="cf-chl-widget-3r4x4_response"
-                          value="0.vGEehCKXi4znqbhUt3dUzKaBJBuNzGiauWF6UZFE-0-6E_dcgEEw50iCraJ7Txg8mkpZg_R1jdoBQ5yKErCQ5difZDc3FwxJ7sAriNazR7XxArPEYE0dz8jBLtMXaX70JfZXj7iq6Lr-FL4x7gi3mv8f-obcmFCTcftoLdTbw13IkaSHqMJb0tiWAMQOMi6pzFIPVbteoXTc_Djo3vxTe3MrZBfvL-ohOe-25q3gjRthyoqtycPbBDkfZ1C1Y4IHEhT56GFcdvbOhZtClrVhzATb9F6pi-RNX9W2PV3NKXpbxUtyclGjiJcNasYfBYhrENnJZVA76yJ2zxcMNSFVf-tqxhNR1SdMv303sqZn-axRlC9958hlXk4SnsIQXlSCrEHsFowV9ARCLm6a21UJ7Breefy1_DXWwheDWItS98XqCSpv0JtD8k53VYskr_bBwbiwumj-VnDMeP5h9ELYwAYfl620DI6XOPLD9IkXlt5rEDwKMU-Ql8lDuWOxM9dLzcgSnFlZ1VOXnVqfKnvoSA0KIhAZ0s4-MXJM1VG16z5KKgTgWUcrkS_W9GEBc8tis1iJzyz94Ji_Hh9U52YjFZlFGYsAdpz360Qb8KmX13oWwdmfwHyMSU53Eig2a2ZH_JBdlxilgaxvuocGz_V4V_QCdHqEEOnTy6net3ZLTHjWekJC6yQoazhChmrnCCzayyBVt5XphH2hgKbXjnG6wrVVJnkcT2jvXEbopoTRMMfAwFm0lVNPs7zMPhokpZY6p1bWSVuicqAKWf_bm7TlMI0uGHFXE7bC-ibZL0-NbNSoGs_RpkfYy_gsutMZugc7eb3DTKbajTR9Di3v7y2D8IAXynvBUZc5gflAxjMssRM6TjI54M5Tk-Zh4SRGpbMMFxH_XIJpTq5w-gT-UwSucg_h3aTgvvQE0kNCNOqKw1Y.pLOuFFRLVr68eqDkVxwTZw.d990c6b44da789f3b70e571d3e9ddeb66f63d2d444e2b507bc2e2cbc539d3a2d"
-                        />
-                      </div>
-                    </div>
-                  </form>
-                  <div
-                    class="w-form-done"
-                    tabindex="-1"
-                    role="region"
-                    aria-label="Email Form 2 success"
-                  >
-                    <div>Thank you! Your submission has been received!</div>
-                  </div>
-                  <div
-                    class="w-form-fail"
-                    tabindex="-1"
-                    role="region"
-                    aria-label="Email Form 2 failure"
-                  >
-                    <div>
-                      Oops! Something went wrong while submitting the form.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="w-form">
             <form
               id="email-form"
               name="email-form"
               data-name="Email Form"
-              method="get"
+              method="post"
+              action="/support-submit.php"
               class="form-3"
-              data-wf-page-id="6879f1ebdb0a0682f8e2af3d"
-              data-wf-element-id="681f3c36-21c2-a6b7-2e64-35816b31a4cd"
-              data-turnstile-sitekey="0x4AAAAAAAQTptj2So4dx43e"
-              aria-label="Email Form"
+              aria-label="Support Contact Form"
             >
-              <label for="name" class="field-label-dark">Email Address</label
+              <input type="hidden" name="lang" value="en" />
+              <input
+                type="text"
+                name="website_url"
+                value=""
+                tabindex="-1"
+                autocomplete="off"
+                aria-hidden="true"
+                style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0"
+              />
+              <div class="columns-3 w-row">
+                <div class="column-8 w-col w-col-6">
+                  <label for="FirstName" class="field-label-dark"
+                    >First Name</label
+                  ><input
+                    class="text-field w-input"
+                    maxlength="256"
+                    name="FirstName"
+                    data-name="FirstName"
+                    placeholder=""
+                    type="text"
+                    id="FirstName"
+                  />
+                </div>
+                <div class="column-9 w-col w-col-6">
+                  <label for="LastName" class="field-label-dark"
+                    >Last Name</label
+                  ><input
+                    class="text-field w-input"
+                    maxlength="256"
+                    name="LastName"
+                    data-name="LastName"
+                    placeholder=""
+                    type="text"
+                    id="LastName"
+                  />
+                </div>
+              </div>
+              <label for="Email" class="field-label-dark">Email Address</label
               ><input
                 class="text-field w-input"
                 maxlength="256"
-                name="name"
-                data-name="Name"
+                name="Email"
+                data-name="Email"
                 placeholder=""
-                type="text"
-                id="name"
+                type="email"
+                id="Email"
               /><label for="Phone" class="field-label-dark">Phone number</label
               ><input
                 class="text-field w-input"
@@ -446,56 +417,61 @@
                 type="tel"
                 id="Phone"
                 required=""
-              /><label for="email" class="field-label-dark"
+              /><label class="field-label-dark"
                 >What do you need help with?</label
               ><label class="w-checkbox checkbox-label"
                 ><input
                   type="checkbox"
-                  id="checkbox"
-                  name="checkbox"
-                  data-name="Checkbox"
+                  id="help-topic-1"
+                  name="HelpTopics[]"
+                  value="Mobile application help"
+                  data-name="HelpTopics"
                   class="w-checkbox-input checkbox"
-                /><span class="checkbox-label w-form-label" for="checkbox"
+                /><span class="checkbox-label w-form-label" for="help-topic-1"
                   >I need help with the mobile application</span
                 ></label
               ><label class="w-checkbox checkbox-label"
                 ><input
                   type="checkbox"
-                  id="checkbox"
-                  name="checkbox"
-                  data-name="Checkbox"
+                  id="help-topic-2"
+                  name="HelpTopics[]"
+                  value="Technical support / bug"
+                  data-name="HelpTopics"
                   class="w-checkbox-input checkbox"
-                /><span class="checkbox-label w-form-label" for="checkbox"
+                /><span class="checkbox-label w-form-label" for="help-topic-2"
                   >I need technical support to help resolve a bug</span
                 ></label
               ><label class="w-checkbox checkbox-label"
                 ><input
                   type="checkbox"
-                  id="checkbox"
-                  name="checkbox"
-                  data-name="Checkbox"
+                  id="help-topic-3"
+                  name="HelpTopics[]"
+                  value="Talk to sales"
+                  data-name="HelpTopics"
                   class="w-checkbox-input checkbox"
-                /><span class="checkbox-label w-form-label" for="checkbox"
+                /><span class="checkbox-label w-form-label" for="help-topic-3"
                   >I'd like to talk to a sales representative</span
                 ></label
               ><label class="w-checkbox checkbox-label"
                 ><input
                   type="checkbox"
-                  id="checkbox"
-                  name="checkbox"
-                  data-name="Checkbox"
+                  id="help-topic-4"
+                  name="HelpTopics[]"
+                  value="Provide feedback"
+                  data-name="HelpTopics"
                   class="w-checkbox-input checkbox"
-                /><span class="checkbox-label w-form-label" for="checkbox"
+                /><span class="checkbox-label w-form-label" for="help-topic-4"
                   >I want to provide feedback</span
                 ></label
               ><label class="w-checkbox checkbox-label"
                 ><input
                   type="checkbox"
-                  id="checkbox"
-                  name="checkbox"
-                  data-name="Checkbox"
+                  id="help-topic-5"
+                  name="HelpTopics[]"
+                  value="Other"
+                  data-name="HelpTopics"
                   class="w-checkbox-input checkbox"
-                /><span class="checkbox-label w-form-label" for="checkbox"
+                /><span class="checkbox-label w-form-label" for="help-topic-5"
                   >Other</span
                 ></label
               ><label for="Details" class="field-label-dark"
@@ -515,34 +491,6 @@
                 class="button-3 w-button"
                 value="Submit"
               />
-              <div>
-                <div>
-                  <template shadowrootmode="closed"
-                    ><iframe
-                      src="https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/if/ov2/av0/rcv/7ck7r/0x4AAAAAAAQTptj2So4dx43e/auto/fbE/new/normal/auto/"
-                      allow="cross-origin-isolated; fullscreen; autoplay"
-                      sandbox="allow-same-origin allow-scripts allow-popups"
-                      id="cf-chl-widget-7ck7r"
-                      tabindex="-1"
-                      title="Widget containing a Cloudflare security challenge"
-                      style="
-                        border: none;
-                        overflow: hidden;
-                        width: 0px;
-                        height: 0px;
-                        position: absolute;
-                        visibility: hidden;
-                      "
-                      aria-hidden="true"
-                    ></iframe></template
-                  ><input
-                    type="hidden"
-                    name="cf-turnstile-response"
-                    id="cf-chl-widget-7ck7r_response"
-                    value="0.6cfOQSzcktMRY0qMAvKOT6i0N59akh8iAPhGbVHawBdJa2Gt75McFhE1zDKmbHopv3PgsdnsfHDutzQ3eEGMxufboxfrLJjiUmGGyxFs4Axu3lbIXsLZoqatdo7ZAe4FNjATCVzXS715tgvO_WZMjl3igaxtgbAHQVYYiIVidW-qHZlhauJqjKqQ4HLN7eBqVDZowgUpX0opvK_2hEFgk1NbF5UvZyd0kQVlEa9QD2CFiLYGmQfXksiGIZM1ZZPIV8mDWyQm5kdNrhAkqNmEn1WUIAlaFgmjboHbwvS6gLIK9-fdoF2LKkaVkl_JZ3UF9SuiHd7KUH7lC3CGfdYT1PiIiSEFK8JqLwF0NHuZlxkO1GhZ1u3suphkleIzHk2exXhrhiz4OqE81rQk2YAp4_IPqYMoDothfq6x703NCC9krJA3_9aUsNUuHFZ2A-bp2K8AmeDBOcbChe67v5-MMItwrU543zoVgBYye0THX2h74cNpiLm01qGx76qox8yMeqrxA_aTqIx4HODy7hYMP-MxI7uod1epTIFCJboesOeqlgOuxoQCVCa8VAOFFcv3q7d2vw6qyOFEodlE1zRE1w8KysoMjxJejMxD9NA8GkfMYEMmrfoFnpyQFZuksQwWgBnIVJl1iQnRxWqlWs20pqIPtABV0VXxfiC7ByPRUJxLIW5FnFaaL215oTO6fXvU1CKGysad4aFr4R0n4V7dz9vIHQyXxdzGZdquhYJUtDhcGDT1P8MF2VYN_Jq1_qw_bFsJg-oR1x2TZyq1c_f8Q-6hsMc-A5tcLwqvJfQwaAyGEmPBj7CFfhpGuTOHZfqQHoocekUbnZJLjNgNSyT5JSslKZKt_LF9Gx1Go1YTABtcklfDvUiqaN65MvpzilTtzVxaHHSFskRAoKl05kNCxQjp2QLnSHTDAjxXArgBB_o.ZtYbxPlX2P-XIfjaywIUtA.b46863f403dff4b18677fe395371d98e81d6a1ef85fb0d0b441993a2310eb337"
-                  />
-                </div>
-              </div>
             </form>
             <div
               class="w-form-done"
@@ -566,11 +514,12 @@
     </div>
     <section class="footer-info-en">
       <div class="footer-bottom">
-        <div class="footer-copyright">© 2026 bookit. All rights reserved</div>
+        <div class="footer-copyright">
+          © <span id="year"></span> bookit. All rights reserved
+        </div>
         <div class="footer-legal-block">
           <a
             href="https://bookit-app.com/terms-of-service"
-            target="_blank"
             class="footer-legal-link"
             >Terms Of Service</a
           ><a
@@ -588,7 +537,7 @@
     </section>
     <div class="menu-narrow">
       <div class="div-block-2">
-        <a href="https://bookit-app.com/support#" class="link-1">Home</a>
+        <a href="https://bookit-app.com/" class="link-1">Home</a>
       </div>
     </div>
     <script
@@ -598,7 +547,7 @@
       crossorigin="anonymous"
     ></script>
     <script
-      src="./bookit_files/webflow.schunk.3b58b0126ec020df.js"
+      src="./bookit_files/webflow.schunk.50d850aa4962b686.js"
       type="text/javascript"
     ></script>
     <script
@@ -620,6 +569,70 @@
     ></script>
     <script type="text/javascript">
       gsap.registerPlugin(SplitText, ScrollTrigger);
+    </script>
+    <script type="text/javascript">
+      document.getElementById("year").textContent = new Date().getFullYear();
+      (function () {
+        var form = document.getElementById("email-form");
+        if (!form) return;
+        var wrapper = form.closest(".w-form");
+        var doneBox = wrapper ? wrapper.querySelector(".w-form-done") : null;
+        var failBox = wrapper ? wrapper.querySelector(".w-form-fail") : null;
+        var submitBtn = form.querySelector('input[type="submit"]');
+        var origBtnText = submitBtn ? submitBtn.value : "Submit";
+
+        window.addEventListener(
+          "submit",
+          function (e) {
+            if (e.target !== form) return;
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            if (failBox) failBox.style.display = "none";
+            if (doneBox) doneBox.style.display = "none";
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.value = submitBtn.getAttribute("data-wait") || "Please wait...";
+            }
+
+            var formData = new FormData(form);
+            fetch(form.getAttribute("action") || "/support-submit.php", {
+              method: "POST",
+              body: formData,
+              headers: { Accept: "application/json" }
+            })
+              .then(function (res) {
+                return res.json().then(function (data) {
+                  return { ok: res.ok && data && data.ok, data: data };
+                });
+              })
+              .then(function (result) {
+                if (result.ok) {
+                  form.style.display = "none";
+                  if (doneBox) doneBox.style.display = "block";
+                } else {
+                  if (failBox) {
+                    var msgEl = failBox.querySelector("div");
+                    if (msgEl && result.data && result.data.error) {
+                      msgEl.textContent = result.data.error;
+                    }
+                    failBox.style.display = "block";
+                  }
+                }
+              })
+              .catch(function () {
+                if (failBox) failBox.style.display = "block";
+              })
+              .finally(function () {
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.value = origBtnText;
+                }
+              });
+          },
+          true
+        );
+      })();
     </script>
     <a class="w-webflow-badge" href="https://webflow.com/?utm_campaign=brandjs"
       ><img

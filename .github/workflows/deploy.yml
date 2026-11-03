@@ -1,0 +1,33 @@
+name: Deploy Website to AWS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: deploy-bookit-website-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to EC2 & CloudFront (eu-north-1)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::524522255968:role/bookit-website-prod-github-deploy
+          aws-region: eu-north-1
+
+      - name: Package, deploy via SSM, and invalidate CloudFront
+        run: ./infra/deploy.sh
+

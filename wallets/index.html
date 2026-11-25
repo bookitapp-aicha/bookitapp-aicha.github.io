@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wallet &amp; Gift Cards Plan</title>
+<meta name="description" content="Plan for the Bookit wallet and gift cards epic (#1085): rules, a working demo of both apps, database design, API and delivery plan.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23790077'/%3E%3Cpath d='M8 12.5A2.5 2.5 0 0 1 10.5 10H22v3M8 12.5V21a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H10.5A2.5 2.5 0 0 1 8 12.5z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+/* Base reset (the claude.ai viewer used to supply this). */
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; -webkit-text-size-adjust: 100%; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+pre.mermaid { visibility: hidden; }
+pre.mermaid[data-processed="true"] { visibility: visible; }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column for the plan, with the live demo breaking out to three panes (client phone, business phone, API + database). */
+:root {
+  --bg: #fbf8fc; --surface: #ffffff; --surface-2: #f4eef6; --ink: #1d1320; --ink-2: #5f5366; --line: #e5dcea;
+  --brand: #790077; --brand-ink: #ffffff; --brand-soft: #fbe6fb; --violet: #5b3fe6; --violet-soft: #efecff;
+  --ok: #1c7a45; --ok-soft: #e4f5ea; --warn: #8f5200; --warn-soft: #fdf0d9; --bad: #b02236; --bad-soft: #fde7ea; --code-bg: #f7f2f9;
+  --display: 'Outfit', 'Avenir Next', 'Segoe UI', sans-serif; --body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* The two apps are light-only, so the phone mock-ups keep one fixed palette in both themes. */
+  --p-ink: #212529; --p-ink2: #6c757d; --p-line: #dee2e6; --p-scaffold: #f8f9fa; --p-brand: #790077; --p-brand-soft: #ffe6fe;
+  --p-violet: #6c4fff; --p-violet-soft: #f1efff; --p-ok: #1f8a3b; --p-frame: #17101b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #150f18; --surface: #1e1622; --surface-2: #281d2d; --ink: #f2eaf5; --ink-2: #b5a8bc; --line: #3b2d42;
+    --brand: #e77ae4; --brand-ink: #1c0a1c; --brand-soft: #3a1a3a; --violet: #ab9aff; --violet-soft: #292250;
+    --ok: #63d18d; --ok-soft: #15321f; --warn: #f0b659; --warn-soft: #3a2a10; --bad: #ff8d99; --bad-soft: #3d1a20; --code-bg: #231a28;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #150f18; --surface: #1e1622; --surface-2: #281d2d; --ink: #f2eaf5; --ink-2: #b5a8bc; --line: #3b2d42;
+  --brand: #e77ae4; --brand-ink: #1c0a1c; --brand-soft: #3a1a3a; --violet: #ab9aff; --violet-soft: #292250;
+  --ok: #63d18d; --ok-soft: #15321f; --warn: #f0b659; --warn-soft: #3a2a10; --bad: #ff8d99; --bad-soft: #3d1a20; --code-bg: #231a28;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body { background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1180px; margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3, h4 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.1rem, 5vw, 3.2rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.2vw, 2.1rem); font-weight: 600; }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { font-size: 1rem; font-weight: 600; }
+p { margin: 0; }
+a { color: var(--brand); }
+code, pre { font-family: var(--mono); }
+code { font-size: 0.86em; background: var(--code-bg); border: 1px solid var(--line); border-radius: 5px; padding: 0.05em 0.35em; overflow-wrap: anywhere; }
+pre code { background: none; border: 0; padding: 0; }
+:focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+/* top navigation */
+.topnav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--bg); border-bottom: 1px solid var(--line); }
+.topnav .wrap { display: flex; align-items: center; gap: 18px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.topnav b { font-family: var(--display); font-weight: 700; color: var(--brand); white-space: nowrap; }
+.topnav a { color: var(--ink-2); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+.topnav a:hover { color: var(--brand); }
+
+/* hero */
+.hero { padding-block: 48px 28px; }
+.hero .wrap { display: flex; flex-direction: column; gap: 16px; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand); }
+.lead { color: var(--ink-2); max-width: 68ch; font-size: 1.05rem; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 6px 0 0; padding: 0; list-style: none; font-size: 14px; color: var(--ink-2); }
+.facts b { color: var(--ink); font-family: var(--display); font-size: 1.15rem; margin-right: 6px; font-variant-numeric: tabular-nums; }
+
+section { padding-block: 40px; border-top: 1px solid var(--line); }
+section > .wrap { display: flex; flex-direction: column; gap: 18px; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.cols > * { min-width: 0; }
+.prose { max-width: 72ch; display: flex; flex-direction: column; gap: 12px; }
+.prose ul, .prose ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+
+/* decisions */
+.decisions { counter-reset: d; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.decisions li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--ink-2); }
+.decisions b { font-family: var(--display); font-size: 1.02rem; color: var(--ink); }
+.decisions q { quotes: none; font-size: 13px; border-left: 2px solid var(--brand); padding-left: 8px; color: var(--ink-2); font-style: italic; }
+
+.tag { display: inline-block; font-size: 11.5px; font-weight: 600; border-radius: 100px; padding: 1px 9px; white-space: nowrap; }
+.tag.decided { background: var(--brand-soft); color: var(--brand); }
+.tag.story { background: var(--violet-soft); color: var(--violet); }
+.tag.proposed { background: var(--warn-soft); color: var(--warn); }
+.tag.new { background: var(--ok-soft); color: var(--ok); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--ink-2); }
+
+.note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--brand); border-radius: 8px; padding: 12px 14px; font-size: 14.5px; max-width: 80ch; }
+.note.warn { border-left-color: var(--warn); }
+
+/* tables */
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.tbl { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+.tbl th, .tbl td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+.tbl th { font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-2); background: var(--surface-2); font-weight: 600; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl td:first-child { font-weight: 500; }
+.tbl .grp td { background: var(--surface-2); font-family: var(--display); font-weight: 600; }
+.tbl code { white-space: nowrap; }
+.tbl .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.diagram { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; overflow-x: auto; }
+.diagram h3 { margin-bottom: 4px; }
+.diagram p { font-size: 14px; color: var(--ink-2); margin-bottom: 10px; max-width: 72ch; }
+pre.mermaid { margin: 0; font-size: 13px; background: none; }
+
+/* endpoints */
+.eps { display: flex; flex-direction: column; gap: 8px; }
+details.ep { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+details.ep summary { cursor: pointer; padding: 10px 12px; display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 4px 10px; align-items: baseline; list-style: none; }
+details.ep summary::-webkit-details-marker { display: none; }
+details.ep summary code { background: none; border: 0; padding: 0; font-size: 13px; font-weight: 500; }
+details.ep summary span { grid-column: 2; font-size: 13.5px; color: var(--ink-2); }
+.m { font-family: var(--mono); font-size: 11.5px; font-weight: 500; border-radius: 5px; padding: 2px 0; text-align: center; background: var(--surface-2); color: var(--ink); }
+.m.post { background: var(--ok-soft); color: var(--ok); } .m.put, .m.patch { background: var(--warn-soft); color: var(--warn); } .m.get { background: var(--violet-soft); color: var(--violet); }
+.ep-b { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; border-top: 1px solid var(--line); padding-top: 10px; }
+.ep-b pre, pre.code { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 12.5px; line-height: 1.5; overflow-x: auto; }
+.ep-b small { color: var(--ink-2); font-size: 12.5px; }
+
+/* phases */
+.phases { display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: ph -1; }
+.phases > li { counter-increment: ph; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 6px 16px; }
+.phases > li::before { content: "Phase " counter(ph); font-family: var(--display); font-weight: 700; color: var(--brand); }
+.phases h3 { grid-column: 2; }
+.phases .ph-b { grid-column: 2; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; }
+.phases ul { margin: 0; padding-left: 18px; }
+.phases .ph-meta { font-size: 13px; color: var(--ink-2); }
+@media (max-width: 560px) { .phases > li { grid-template-columns: 1fr; } .phases h3, .phases .ph-b { grid-column: 1; } }
+
+.qs { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: q; }
+.qs li { counter-increment: q; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px 12px 46px; position: relative; font-size: 14.5px; }
+.qs li::before { content: counter(q); position: absolute; left: 14px; top: 12px; font-family: var(--display); font-weight: 700; color: var(--brand); font-variant-numeric: tabular-nums; }
+.qs b { display: block; }
+.qs span { color: var(--ink-2); }
+
+/* ---------- demo shell ---------- */
+#demo { background: var(--surface-2); }
+.demo-bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.demo-clock { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-width: 0; }
+.demo-clock span { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); }
+.demo-clock b { font-family: var(--display); font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.demo-clock small { font-size: 13px; color: var(--ink-2); flex-basis: 100%; }
+.demo-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 500 14px var(--body); border-radius: 100px; padding: 8px 16px; border: 1px solid var(--brand); background: var(--brand); color: var(--brand-ink); cursor: pointer; }
+.btn.quiet { background: transparent; color: var(--brand); }
+.viewpick { display: none; background: var(--surface); border: 1px solid var(--line); border-radius: 100px; padding: 4px; }
+.viewpick button { flex: 1; font: 500 13.5px var(--body); border: 0; background: none; color: var(--ink-2); border-radius: 100px; padding: 8px 6px; cursor: pointer; }
+.viewpick button.on { background: var(--brand); color: var(--brand-ink); }
+.demo-grid { display: grid; grid-template-columns: 340px 340px minmax(0, 1fr); gap: 22px; align-items: start; }
+.pane { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.pane > h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.pane > h3 span { font: 400 13px var(--body); color: var(--ink-2); }
+.pane-note { font-size: 13px; color: var(--ink-2); min-height: 52px; }
+.persona { display: flex; flex-wrap: wrap; gap: 6px; min-height: 52px; align-content: flex-start; }
+.pill { font: inherit; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 4px 10px; cursor: pointer; display: flex; flex-direction: column; line-height: 1.25; text-align: left; }
+.pill b { font-size: 13px; font-weight: 600; } .pill span { font-size: 11px; color: var(--ink-2); }
+.pill.on { border-color: var(--brand); background: var(--brand-soft); } .pill.on b { color: var(--brand); }
+@media (max-width: 1139px) {
+  .viewpick { display: flex; }
+  .demo-grid { grid-template-columns: minmax(0, 1fr); }
+  .pane { display: none; }
+  #demo[data-view="c"] .pane-c, #demo[data-view="b"] .pane-b, #demo[data-view="x"] .pane-x { display: flex; }
+  .pane-note, .persona { min-height: 0; }
+}
+.tries { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.tries li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--ink-2); }
+.tries b { font-family: var(--display); color: var(--ink); font-size: 1rem; }
+.tries .btn { align-self: flex-start; margin-top: auto; padding: 6px 14px; font-size: 13px; }
+
+/* ---------- inspector ---------- */
+.inspector { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; min-width: 0; }
+.insp-tabs { display: flex; border-bottom: 1px solid var(--line); }
+.insp-tabs button { flex: 1; padding: 11px 8px; font: 600 14px var(--body); background: none; border: 0; border-bottom: 2px solid transparent; color: var(--ink-2); cursor: pointer; }
+.insp-tabs button.on { color: var(--brand); border-bottom-color: var(--brand); }
+.insp-tabs span { font-weight: 500; font-size: 12px; background: var(--surface-2); border-radius: 100px; padding: 1px 7px; margin-left: 4px; }
+.insp-tabs .dot { background: var(--ok-soft); color: var(--ok); }
+.calls { max-height: 640px; overflow-y: auto; }
+.call { border-bottom: 1px solid var(--line); }
+.call.open { background: var(--surface-2); }
+.call-h { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 8px; align-items: center; width: 100%; padding: 9px 12px; background: none; border: 0; font: inherit; color: var(--ink); cursor: pointer; text-align: left; }
+.call-h code { font-size: 12px; background: none; border: 0; padding: 0; }
+.who { font-size: 10.5px; font-weight: 600; border-radius: 100px; padding: 2px 7px; white-space: nowrap; }
+.who-b2c { background: var(--violet-soft); color: var(--violet); } .who-b2b { background: var(--brand-soft); color: var(--brand); } .who-system { background: var(--line); color: var(--ink-2); }
+.verb { font: 500 11px var(--mono); color: var(--ink-2); }
+.st { font: 500 12px var(--mono); color: var(--ok); } .call.err .st { color: var(--bad); }
+.call-b { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.call-b small { color: var(--ink-2); }
+.call-b h6 { margin: 6px 0 0; font: 600 11px var(--body); text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); }
+.call-b pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px; font-size: 11.5px; line-height: 1.45; max-height: 260px; overflow: auto; }
+.call-b ul { margin: 0; padding-left: 18px; }
+.tchips, .tpick { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.tpick { padding: 10px 12px 6px; }
+.tchips button, .tpick button { font: 500 11.5px var(--mono); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 100px; padding: 3px 10px; cursor: pointer; }
+.tpick button.on { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
+.tpick button span { color: var(--ink-2); }
+.tpick button.hot::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); margin-right: 5px; }
+.tnote { padding: 0 12px 8px; font-size: 12.5px; color: var(--ink-2); }
+.tk { font-weight: 600; margin-right: 4px; } .tk.new { color: var(--ok); } .tk.changed { color: var(--warn); }
+.dbscroll { max-height: 540px; overflow: auto; border-width: 1px 0 0; border-radius: 0; }
+table.db { border-collapse: collapse; font: 11.5px var(--mono); white-space: nowrap; width: 100%; }
+table.db th, table.db td { padding: 5px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+table.db th { position: sticky; top: 0; background: var(--surface-2); font-weight: 500; color: var(--ink-2); }
+table.db tr.hot td { background: var(--ok-soft); }
+table.db .nil { color: var(--ink-2); opacity: 0.6; }
+
+/* ---------- phone mock-ups (fixed light palette) ---------- */
+.phone { width: 100%; max-width: 340px; margin-inline: auto; background: var(--p-frame); border-radius: 38px; padding: 10px; }
+.phone-in { position: relative; height: 650px; border-radius: 29px; overflow: hidden; background: #fff; color: var(--p-ink); display: flex; flex-direction: column; font: 14px/1.35 var(--display); color-scheme: light; }
+.phone-in :where(button) { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.phone-in :where(small) { font-size: 12px; color: var(--p-ink2); display: block; font-weight: 400; }
+.phone-in :where(h3, h4, h5) { margin: 0; }
+.phone-in :focus-visible { outline: 2px solid var(--p-violet); outline-offset: 1px; }
+.p-status { display: flex; justify-content: space-between; padding: 9px 20px 2px; font-size: 11px; color: var(--p-ink2); background: #fff; }
+.p-head { display: flex; align-items: center; gap: 6px; padding: 4px 8px 8px; border-bottom: 1px solid var(--p-line); background: #fff; }
+.p-head strong { flex: 1; text-align: center; font-size: 16px; font-weight: 600; }
+.p-ic { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; flex: none; }
+.p-body { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+.p-body.scaffold { background: var(--p-scaffold); }
+.p-body > * { flex-shrink: 0; }
+.p-nav { display: flex; border-top: 1px solid var(--p-line); background: var(--p-scaffold); }
+.p-nav > * { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 0 10px; font-size: 11px; font-weight: 500; color: var(--p-ink2); }
+.p-nav .on { color: #971e95; } .p-nav .on span { text-decoration: underline; text-underline-offset: 3px; } .p-nav .off { opacity: 0.4; }
+.p-btn { display: inline-flex; justify-content: center; align-items: center; gap: 12px; background: var(--p-brand); color: #fff; border-radius: 100px; padding: 11px 22px; font-weight: 600; font-size: 15px; text-align: center; }
+.p-btn.wide { display: flex; width: 100%; }
+.p-btn.wide span:first-child:not(:only-child) { margin-right: auto; }
+.p-btn.ghost { background: transparent; color: var(--p-brand); box-shadow: inset 0 0 0 1.5px var(--p-brand); }
+.p-btn.small { padding: 7px 16px; font-size: 13px; }
+.p-card { border: 1px solid var(--p-line); border-radius: 14px; padding: 12px; background: #fff; display: flex; flex-direction: column; gap: 4px; width: 100%; }
+.p-svc { flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; }
+.p-svc div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.p-svc div span { font-weight: 600; color: var(--p-brand); }
+.p-cover { border-radius: 16px; padding: 46px 14px 14px; color: #fff; background: linear-gradient(135deg, #3a0039, #790077 55%, #c437c2); }
+.p-cover h3 { font-size: 20px; } .p-cover p { margin: 4px 0 0; font-size: 12px; }
+.p-open { background: #fff; color: var(--p-ok); border-radius: 100px; padding: 1px 8px; font-weight: 600; }
+.p-walletchip { display: flex; align-items: center; gap: 8px; border-radius: 100px; background: var(--p-violet-soft); box-shadow: inset 0 0 0 1px var(--p-violet); color: #3b2aa8; padding: 8px 14px; font-size: 13px; width: 100%; }
+.p-walletchip b { font-weight: 700; } .p-walletchip em { margin-left: auto; font-style: normal; font-size: 11px; }
+.p-giftbanner { display: flex; align-items: center; gap: 10px; border-radius: 14px; background: var(--p-brand-soft); padding: 10px 12px; color: var(--p-brand); width: 100%; }
+.p-giftbanner span { flex: 1; display: flex; flex-direction: column; } .p-giftbanner small { color: #7a3f79; }
+.p-tabs { display: flex; border-bottom: 1px solid var(--p-line); }
+.p-tabs button { flex: 1; text-align: center; padding: 8px 0; font-size: 13px; color: var(--p-ink2); border-bottom: 2px solid transparent; }
+.p-tabs button.on { color: var(--p-brand); border-bottom-color: var(--p-brand); font-weight: 600; }
+.p-lead { font-size: 13px; color: var(--p-ink2); margin: 0; line-height: 1.45; }
+.p-label { font-size: 12px; font-weight: 500; margin-top: 2px; }
+.p-input { width: 100%; height: 40px; border: 1px solid var(--p-line); border-radius: 8px; padding: 0 10px; font: inherit; font-size: 14px; background: #fff; color: var(--p-ink); }
+.p-hint { margin-top: -6px; }
+.p-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.p-chip { box-shadow: inset 0 0 0 1px var(--p-line); border-radius: 100px; padding: 6px 14px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.p-chip.on { box-shadow: inset 0 0 0 1.5px var(--p-brand); background: var(--p-brand-soft); color: var(--p-brand); font-weight: 600; }
+.p-note { font-size: 12px; line-height: 1.4; background: var(--p-scaffold); border-radius: 10px; padding: 8px 10px; color: #444952; }
+.p-note.ok { background: #e9fbf4; color: #1c6b4d; }
+.p-body.scaffold .p-note { background: #fff; box-shadow: inset 0 0 0 1px var(--p-line); }
+.p-h { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--p-ink2); margin-top: 6px; font-weight: 600; }
+.p-mh { font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: #9aa2ab; margin-top: 8px; font-weight: 600; }
+.p-tile { display: flex; width: 100%; box-shadow: inset 0 0 0 1px var(--p-line); border-radius: 10px; padding: 10px 12px; background: #fff; }
+.p-tile.on { box-shadow: inset 0 0 0 1.5px var(--p-brand); background: var(--p-brand-soft); }
+.p-tile span { display: flex; flex-direction: column; gap: 2px; } .p-tile b { font-size: 14px; font-weight: 600; }
+.p-tiles2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.p-switchrow { display: flex; width: 100%; align-items: center; gap: 10px; box-shadow: inset 0 0 0 1px var(--p-line); border-radius: 10px; padding: 10px 12px; background: #fff; }
+.p-switchrow > span { flex: 1; display: flex; flex-direction: column; gap: 2px; } .p-switchrow b { font-weight: 600; }
+.p-switch { width: 38px; height: 22px; border-radius: 100px; background: #ced4da; position: relative; flex: none; }
+.p-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform 0.15s; }
+.p-switch.on { background: var(--p-brand); } .p-switch.on::after { transform: translateX(16px); }
+.p-sum { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-variant-numeric: tabular-nums; }
+.p-sum div { display: flex; justify-content: space-between; gap: 10px; }
+.p-sum .tot { font-weight: 700; font-size: 14px; border-top: 1px solid var(--p-line); padding-top: 6px; }
+.p-sum .plus { color: var(--p-ok); }
+.p-sum.box { background: #f5f5f5; border-radius: 12px; padding: 12px; }
+.p-bal { border-radius: 16px; padding: 16px; color: #fff; background: linear-gradient(135deg, #510550, #790077); display: flex; flex-direction: column; gap: 4px; }
+.p-bal span { font-size: 12px; opacity: 0.9; } .p-bal b { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; } .p-bal small { color: #f6d9f5; }
+.p-gc { display: flex; flex-direction: column; gap: 6px; width: 100%; box-shadow: inset 0 0 0 1px var(--p-violet); background: var(--p-violet-soft); border-radius: 16px; padding: 12px; }
+.p-gc-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; }
+.p-gc-id { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; color: #444952; }
+.p-bar { height: 6px; border-radius: 6px; background: #dbd4ff; overflow: hidden; display: block; } .p-bar i { display: block; height: 100%; background: var(--p-violet); }
+.p-gc-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 11px; color: var(--p-ink2); font-variant-numeric: tabular-nums; }
+.p-gc-nums span { display: flex; flex-direction: column; } .p-gc-nums b { font-size: 12.5px; color: var(--p-ink); font-weight: 600; }
+.p-badge { font-size: 11px; font-weight: 600; border-radius: 100px; padding: 2px 8px; white-space: nowrap; }
+.p-badge.ok { background: #e9fbf4; color: #1c6b4d; } .p-badge.wait { background: #fef3c7; color: #92400e; } .p-badge.mute { background: #e9ecef; color: #495057; } .p-badge.bad { background: #fde8ea; color: #a11d2c; }
+.p-list { display: flex; flex-direction: column; }
+.p-act { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--p-line); font-size: 13px; }
+.p-act > span:first-child { display: flex; flex-direction: column; min-width: 0; } .p-act b { font-weight: 500; }
+.p-act .plus { color: var(--p-ok); font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; } .p-act .minus { white-space: nowrap; font-weight: 600; font-variant-numeric: tabular-nums; }
+.p-done { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 0 6px; text-align: center; }
+.p-done p { margin: 0; color: var(--p-ink2); }
+.p-tick { width: 56px; height: 56px; border-radius: 50%; background: #e9fbf4; color: #1c6b4d; display: grid; place-items: center; }
+.p-bk .p-btn { align-self: flex-start; margin-top: 4px; }
+.p-pk { background: var(--p-violet-soft); box-shadow: inset 0 0 0 1px var(--p-violet); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.p-pk small { color: var(--p-violet); font-weight: 600; letter-spacing: 0.05em; } .p-pk b { font-size: 18px; } .p-pk span { font-size: 13px; }
+.p-drawer { position: absolute; inset: 0; display: flex; z-index: 5; }
+.p-drawer-in { width: 80%; background: var(--p-scaffold); border-right: 1px solid var(--p-line); padding: 44px 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+.p-drawer-in strong { font-size: 16px; padding: 0 10px 10px; }
+.p-scrim { flex: 1; background: rgba(0, 0, 0, 0.35); }
+.p-mrow { display: flex; width: 100%; justify-content: space-between; align-items: center; padding: 11px 10px; border-radius: 10px; font-size: 15px; }
+.p-mrow.on { background: var(--p-violet-soft); } .p-mrow.off { opacity: 0.38; }
+.p-mrow em { font-style: normal; font-size: 10px; font-weight: 700; background: var(--p-brand); color: #fff; border-radius: 100px; padding: 1px 7px; margin-left: 6px; vertical-align: middle; }
+.p-sheet { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); display: flex; align-items: flex-end; z-index: 6; }
+.p-sheet-card { background: #fff; width: 100%; border-radius: 20px 20px 0 0; padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 10px; max-height: 90%; overflow-y: auto; }
+.p-sheet-card > * { flex-shrink: 0; }
+.p-sheet-card h4 { font-size: 17px; line-height: 1.25; } .p-sheet-card p { margin: 0; font-size: 13px; color: var(--p-ink2); }
+.p-gw { text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; }
+.p-toast { position: absolute; left: 12px; right: 12px; bottom: 12px; background: #212529; color: #fff; border-radius: 12px; padding: 10px 12px; font-size: 13px; line-height: 1.35; z-index: 7; }
+.p-toast.bad { background: #a11d2c; } .p-toast.up { bottom: 68px; }
+.p-seg { display: flex; background: #e9ecef; border-radius: 25px; padding: 4px; }
+.p-seg button { flex: 1; text-align: center; border-radius: 21px; padding: 7px 4px; font-size: 13px; color: var(--p-ink2); }
+.p-seg button.on { background: #fff; color: var(--p-ink); font-weight: 600; }
+.p-recblock { display: flex; flex-direction: column; gap: 6px; }
+.p-newclient { display: flex; flex-direction: column; gap: 6px; padding-left: 10px; border-left: 2px solid var(--p-brand-soft); }
+.p-link { color: var(--p-brand); font-size: 12px; align-self: flex-start; text-decoration: underline; }
+.p-kv { display: flex; flex-direction: column; background: #fff; box-shadow: inset 0 0 0 1px var(--p-line); border-radius: 12px; padding: 2px 12px; }
+.p-kv div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--p-line); font-size: 13px; }
+.p-kv div:last-child { border-bottom: 0; } .p-kv span { color: var(--p-ink2); } .p-kv b { font-weight: 500; text-align: right; } .p-kv small { text-align: right; }
+.p-search { box-shadow: inset 0 0 0 1px var(--p-line); border-radius: 12px; background: #f5f5f5; padding: 10px 12px; font-size: 13px; color: var(--p-ink2); }
+.p-crow { display: flex; width: 100%; align-items: center; gap: 10px; padding: 8px 2px; }
+.p-crow i { width: 40px; height: 40px; border-radius: 50%; background: var(--p-brand-soft); color: var(--p-brand); display: grid; place-items: center; font-style: normal; font-weight: 600; font-size: 13px; flex: none; }
+.p-crow span { flex: 1; display: flex; flex-direction: column; min-width: 0; } .p-crow b { font-weight: 500; }
+.p-walletrow { flex-direction: row; justify-content: space-between; align-items: center; } .p-walletrow b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.p-stepper { display: flex; align-items: center; gap: 10px; box-shadow: inset 0 0 0 1px var(--p-line); border-radius: 10px; padding: 10px 12px; background: #fff; }
+.p-stepper > span { flex: 1; display: flex; flex-direction: column; } .p-stepper > div { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.p-stepper button { width: 30px; height: 30px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--p-brand); color: var(--p-brand); text-align: center; font-size: 18px; line-height: 1; }
+footer { border-top: 1px solid var(--line); padding-block: 28px 40px; font-size: 13.5px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<nav class="topnav" aria-label="Sections"><div class="wrap">
+  <b>Wallet &amp; Gift Cards</b>
+  <a href="#decisions">Decisions</a><a href="#demo">Live demo</a><a href="#rules">Rules</a><a href="#flows">Flows</a><a href="#database">Database</a><a href="#api">API</a><a href="#apps">App changes</a><a href="#plan">Delivery plan</a><a href="#hardening">Security &amp; QA</a><a href="#open">Open questions</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="eyebrow">Epic #1085 · bookit-fullview · plan for review, 25 Nov 2026</span>
+  <h1>Wallet &amp; Gift Cards</h1>
+  <p class="lead">Every client gets a wallet at each business. Money enters it three ways: a gift card sent to their phone number, a refund the business returns as credit, and the cashback that already exists. The wallet is then spent first at checkout, in the client app or at the front desk. This page is the full plan: the rules, a working demo of both apps with the API calls and database rows behind each tap, the schema, the endpoints, and the order to build it in.</p>
+  <ul class="facts">
+    <li><b>10</b>stories under 5 features</li>
+    <li><b>4</b>new tables, 4 extended</li>
+    <li><b>20</b>endpoints, 14 of them new</li>
+    <li><b>3</b>codebases: API, client web app, business app</li>
+  </ul>
+</div></header>
+
+<main>
+<section id="decisions"><div class="wrap">
+  <h2>What was decided today</h2>
+  <p class="lead">Five answers from 25 Nov settle the gaps in the stories. They change the design more than the stories suggest, mainly because a gift card is now money in the wallet and no longer a separate payment method.</p>
+  <ol class="decisions">
+    <li><b>Staff choose where a refund goes</b>When staff void a gift card or refund by hand, a popup asks each time.<q>Refund to wallet or to original method of payment?</q></li>
+    <li><b>Bulk cards share one amount</b>A company sale gives every recipient the same amount. One sale, one payment, one card each.</li>
+    <li><b>A gift card becomes wallet balance</b>When a card reaches an account, its amount is added to the wallet. The wallet is always spent first.</li>
+    <li><b>Wallet credit expires</b>The owner sets how long credit lasts. The default is 6 months from the day it is added.</li>
+    <li><b>Phone number only</b>A gift card is attached to a phone number. Email is never used to match a recipient.</li>
+  </ol>
+  <div class="note">What this plan had to assume on top of those answers is listed under <a href="#open">Open questions</a>. The two that matter most: gift cards "do not expire" in story #1090, yet wallet credit now does, and a refund that expires is the client's own money.</div>
+</div></section>
+
+<section id="demo" data-view="c"><div class="wrap">
+  <h2>Live demo</h2>
+  <p class="lead">Both apps below are working mock-ups driven by one in-page model of the proposed backend. Tap through them like the real apps. The third pane shows the API call each tap makes and the rows it writes. All names, numbers and amounts are sample data, and nothing leaves this page.</p>
+  <div class="demo-bar">
+    <div class="demo-clock"><span>Demo date</span><b id="demo-date">25 Nov 2026</b><small id="demo-cfg">Online refunds go to: card · Credit expires after 6 months</small></div>
+    <div class="demo-actions"><button class="btn quiet" data-a="g.advance" data-d="30">Skip 1 month</button><button class="btn quiet" data-a="g.advance" data-d="183">Skip 6 months</button><button class="btn" data-a="g.reset">Reset demo</button></div>
+  </div>
+  <div class="viewpick" role="group" aria-label="Choose a pane"><button data-a="g.view" data-v="c" class="on">Client app</button><button data-a="g.view" data-v="b">Business app</button><button data-a="g.view" data-v="x">API &amp; database</button></div>
+  <div class="demo-grid">
+    <div class="pane pane-c"><h3>Client app <span>B2C · Next.js web app</span></h3><div class="persona" id="c-persona" role="group" aria-label="Signed in as"></div><div class="phone"><div class="phone-in" id="c-phone"></div></div></div>
+    <div class="pane pane-b"><h3>Business app <span>B2B · Flutter</span></h3><p class="pane-note">Signed in as Mona at the front desk, with permission to sell and void gift cards. Open Menu for Gift cards, Member profiles and Billing &amp; payment.</p><div class="phone"><div class="phone-in" id="b-phone"></div></div></div>
+    <div class="pane pane-x"><h3>API and database <span>what each tap does</span></h3><div class="inspector" id="inspector"></div></div>
+  </div>
+  <h3>Things to try</h3>
+  <ul class="tries">
+    <li><b>Buy a gift card for a friend</b>Salma buys EGP 500 for Layla, whose number has no account. Approve the card payment and the gift card waits for that number.<button class="btn" data-a="g.scn" data-n="1">Set it up</button></li>
+    <li><b>Sign up and receive it</b>Layla signs up with the same WhatsApp number. Once the number is verified, the card is added to her wallet. Do the step before this one first.<button class="btn" data-a="g.scn" data-n="2">Set it up</button></li>
+    <li><b>Wallet first, card for the rest</b>Omar books a EGP 900 massage with EGP 650 in his wallet. Try declining the card payment: the wallet hold is released.<button class="btn" data-a="g.scn" data-n="3">Set it up</button></li>
+    <li><b>Company gift cards in one sale</b>The front desk sells Delta Tech two cards of the same amount, adds both employees as new clients, and records one payment.<button class="btn" data-a="g.scn" data-n="4">Set it up</button></li>
+    <li><b>Void a gift card</b>Open a front-desk card and tap Void or refund. The popup asks wallet or original method, and the unused amount goes back to the sender.<button class="btn" data-a="g.scn" data-n="5">Set it up</button></li>
+    <li><b>Refund an online payment to the wallet</b>Save the Wallet configuration toggle in the business app, then cancel Omar's Reformer Pilates in the client app. He is told the money went to his wallet.<button class="btn" data-a="g.scn" data-n="6">Set it up</button></li>
+    <li><b>Front desk checkout with the wallet</b>Omar pays for his massage at the venue. The wallet covers what it can and cash or card covers the rest. Reset the demo first if his wallet is already spent.<button class="btn" data-a="g.scn" data-n="7">Set it up</button></li>
+    <li><b>Let credit expire</b>Jump six months ahead. The nightly job expires what is past its date and each gift card shows the expired amount.<button class="btn" data-a="g.advance" data-d="183">Skip 6 months</button></li>
+  </ul>
+</div></section>
+
+<section id="rules"><div class="wrap">
+  <h2>Business rules</h2>
+  <p class="lead">Every rule the build has to honour, and where it comes from.</p>
+  <p class="legend"><span><span class="tag decided">Decided</span> your answers on 25 Nov</span><span><span class="tag story">#1090</span> written in that story</span><span><span class="tag proposed">Proposed</span> this plan's assumption, to confirm</span></p>
+  <div class="scroll"><table class="tbl">
+    <thead><tr><th>Rule</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="2">Gift cards</td></tr>
+      <tr><td>A gift card is attached to one phone number, stored in international format. Phone is the only thing used to find the recipient.</td><td><span class="tag decided">Decided</span></td></tr>
+      <tr><td>If a client with that number exists at creation, the amount is added to their wallet straight away.</td><td><span class="tag decided">Decided</span></td></tr>
+      <tr><td>If nobody has that number, the card waits. It is added to the wallet when that number is verified by WhatsApp code at sign-up.</td><td><span class="tag story">#1090 AC4</span> <span class="tag decided">Decided</span></td></tr>
+      <tr><td>Every card gets a unique ID such as <code>GC-4E56-W923</code>. The ID is a reference for support. It cannot be used to redeem anything.</td><td><span class="tag story">#1090</span> <span class="tag proposed">Proposed</span></td></tr>
+      <tr><td>A client cannot buy a gift card for their own number, and buys one card per purchase.</td><td><span class="tag story">#1090</span></td></tr>
+      <tr><td>The sender is always a client record, picked or newly added with name and phone. A company is entered as a client record.</td><td><span class="tag story">#1091</span></td></tr>
+      <tr><td>Company sale: one sale, one payment for the total, one card per recipient, the same amount for everyone.</td><td><span class="tag story">#1092</span> <span class="tag decided">Decided</span></td></tr>
+      <tr><td>A gift card is paid for online by card (client) or by a payment staff record (front desk). It cannot be paid for from a wallet.</td><td><span class="tag story">#1097</span></td></tr>
+      <tr><td>The recipient is told by WhatsApp, and by email when one was given.</td><td><span class="tag story">#1090 AC3</span> <span class="tag proposed">Proposed</span></td></tr>
+      <tr class="grp"><td colspan="2">Wallet</td></tr>
+      <tr><td>One balance per client per business. Gift cards, refunds and cashback all add to it.</td><td><span class="tag decided">Decided</span></td></tr>
+      <tr><td>Each credit remembers where it came from. A gift card still shows original amount, used, remaining and its usage list, even though the money sits in the wallet.</td><td><span class="tag story">#1094</span> <span class="tag story">#1095</span></td></tr>
+      <tr><td>Credit expires a set number of months after it is added. The owner sets the number. Default 6.</td><td><span class="tag decided">Decided</span></td></tr>
+      <tr><td>Changing the number affects credit added afterwards. Existing credit keeps its date.</td><td><span class="tag proposed">Proposed</span></td></tr>
+      <tr><td>A waiting gift card does not start counting until it lands in a wallet.</td><td><span class="tag proposed">Proposed</span></td></tr>
+      <tr><td>Credit expires at the end of its last day in the business's timezone, not at midnight UTC.</td><td><span class="tag proposed">Proposed</span></td></tr>
+      <tr><td>No withdrawal to a card and no transfer to another person.</td><td><span class="tag story">#1094</span> <span class="tag story">#1103</span></td></tr>
+      <tr class="grp"><td colspan="2">Paying</td></tr>
+      <tr><td>The wallet appears as a payment option when the balance is above zero. Using it is the client's choice.</td><td><span class="tag story">#1097 AC1</span></td></tr>
+      <tr><td>When it is used, the wallet is drawn first and the rest is paid by card online, or by cash or card at the venue.</td><td><span class="tag decided">Decided</span></td></tr>
+      <tr><td>Inside the wallet, the credit that expires soonest is spent first. Ties go to the oldest.</td><td><span class="tag story">#1097 AC4</span> <span class="tag proposed">Proposed</span></td></tr>
+      <tr><td>It pays for classes, appointments and package purchases. A booking covered by a package never offers it.</td><td><span class="tag story">#1097 AC5</span></td></tr>
+      <tr><td>While a card payment is in progress the wallet amount is held. It is released if the payment fails or is abandoned.</td><td><span class="tag proposed">Proposed</span></td></tr>
+      <tr><td>Staff can apply the wallet at checkout with the same rules.</td><td><span class="tag story">#1098</span></td></tr>
+      <tr><td>Cashback is earned on the part paid by card or cash, not on the part paid from the wallet.</td><td><span class="tag proposed">Proposed</span></td></tr>
+      <tr class="grp"><td colspan="2">Refunds and voids</td></tr>
+      <tr><td>The cancellation policy decides how much is refunded. These rules only decide where it goes.</td><td><span class="tag story">#1102</span></td></tr>
+      <tr><td>The part of a booking paid from the wallet always goes back to the wallet, under the same gift card it came from.</td><td><span class="tag story">#1097 AC6</span></td></tr>
+      <tr><td>When a client cancels, an online payment follows the business setting: wallet when on, card when off.</td><td><span class="tag story">#1102</span></td></tr>
+      <tr><td>When staff refund or void, a popup asks wallet or original method. The business setting only preselects the answer.</td><td><span class="tag decided">Decided</span></td></tr>
+      <tr><td>The setting never changes refunds of payments staff recorded at the venue.</td><td><span class="tag story">#1102 AC4</span></td></tr>
+      <tr><td>The client is told when money went to their wallet and by when to use it.</td><td><span class="tag story">#1103 AC2</span></td></tr>
+      <tr><td>Voiding refunds only the unused amount, to the sender. A voided card stays in history, marked voided.</td><td><span class="tag story">#1100</span> <span class="tag proposed">Proposed</span></td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section id="flows"><div class="wrap">
+  <h2>How it works</h2>
+  <div class="diagram"><h3>Life of a gift card</h3><p>A card only exists once it is paid for. From then on it is either waiting for its phone number or sitting in a wallet as credit.</p>
+<pre class="mermaid">stateDiagram-v2
+  [*] --> pending_payment: Client starts an online purchase
+  pending_payment --> [*]: Payment fails and no card is created
+  pending_payment --> pending_claim: Paid and the number has no account
+  pending_payment --> active: Paid and the number belongs to a client
+  [*] --> active: Front desk sale to a client record
+  pending_claim --> active: Number verified at sign-up
+  pending_claim --> voided: Staff void it and refund in full
+  active --> voided: Staff void it and refund what is left
+  active --> [*]: Used up or expired
+</pre></div>
+  <div class="diagram"><h3>Checkout with the wallet and a card</h3><p>The wallet part is reserved inside the same database transaction that creates the cart, so two checkouts cannot spend the same credit.</p>
+<pre class="mermaid">sequenceDiagram
+  participant C as Client app
+  participant A as API
+  participant W as Wallet ledger
+  participant G as Paymob
+  C->>A: POST /bookings/cart/checkout with use_wallet
+  A->>W: Lock the credits and hold EGP 650
+  A->>G: Create a session for the remaining EGP 250
+  A-->>C: Payment link and the wallet amount applied
+  C->>G: Pays by card
+  alt Payment succeeds
+    G->>A: Webhook success
+    A->>W: Hold becomes a posted spend
+    A-->>C: Booking confirmed
+  else Payment fails or is abandoned
+    G->>A: Webhook failure or reconciliation
+    A->>W: Hold released and credits restored
+    A-->>C: Nothing charged and balance back
+  end
+</pre></div>
+  <div class="diagram"><h3>Where a refund goes</h3><p>Applied to each payment behind a booking separately, so a booking paid partly from the wallet and partly by card can split.</p>
+<pre class="mermaid">flowchart TD
+  R[Policy decides the refund amount] --> P{How was this part paid}
+  P -->|From the wallet| W1[Back to the wallet under the same gift card]
+  P -->|Online or at the venue| Q{Who started the refund}
+  Q -->|Staff| POP[Popup asks wallet or original method]
+  Q -->|Client cancelled| M{Was it paid online}
+  M -->|No| V[Handled as today and the setting does not apply]
+  M -->|Yes| T{Refund to wallet setting}
+  T -->|On| W2[New wallet credit with an expiry date]
+  T -->|Off| O[Paymob refund to the card]
+  POP -->|Wallet| W2
+  POP -->|Original method| O
+</pre></div>
+</div></section>
+
+<section id="database"><div class="wrap">
+  <h2>Database design</h2>
+  <div class="prose">
+    <p>The API already has a <code>WalletLedgers</code> table, created for cashback. It only ever receives credits: nothing debits it, there is no balance endpoint and checkout cannot spend it. This design finishes that ledger instead of starting a second one.</p>
+    <p>The core idea: every credit row is a <b>lot</b> with its own source, remaining amount and expiry date. A spend is a debit row plus allocation rows saying which lots it drew from. That one structure gives per-credit expiry, soonest-to-expire-first spending, and a full usage history for each gift card after its money has merged into the wallet.</p>
+  </div>
+  <div class="diagram"><h3>Tables and relations</h3>
+<pre class="mermaid">erDiagram
+  Businesses ||--|| BusinessWalletConfigs : configures
+  Businesses ||--o{ GiftCardOrders : sells
+  Users ||--o{ GiftCardOrders : buys
+  PaymentTransactions ||--o| GiftCardOrders : pays
+  GiftCardOrders ||--|{ GiftCards : creates
+  Users |o--o{ GiftCards : receives
+  GiftCards ||--o{ WalletLedgers : funds
+  Users ||--o{ WalletLedgers : owns
+  WalletLedgers ||--o{ WalletLedgerAllocations : allocates
+  PaymentTransactions ||--o{ PaymentRefunds : refunds
+  PaymentRefunds |o--o| WalletLedgers : credits
+  BookingCarts |o--o| WalletLedgers : holds
+</pre></div>
+
+  <h3><span class="tag new">New</span> GiftCards</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+    <tr><td><code>id</code></td><td>UUID PK</td><td></td></tr>
+    <tr><td><code>code</code></td><td>VARCHAR(16), unique</td><td>The unique ID shown to people, <code>GC-XXXX-XXXX</code>. Generated from a 31-letter alphabet without look-alikes (no 0, O, 1, I, L).</td></tr>
+    <tr><td><code>business_id</code></td><td>UUID FK Businesses</td><td>A card is only spendable at the business that sold it.</td></tr>
+    <tr><td><code>order_id</code></td><td>UUID FK GiftCardOrders</td><td>The sale that created it.</td></tr>
+    <tr><td><code>amount</code>, <code>currency</code></td><td>DECIMAL(10,2), VARCHAR(10)</td><td>Original amount. Never changes.</td></tr>
+    <tr><td><code>recipient_phone</code></td><td>VARCHAR(20), not null</td><td>E.164, through the existing <code>utils/phoneNormalizer.toE164</code>. The matching key.</td></tr>
+    <tr><td><code>recipient_name</code>, <code>recipient_email</code></td><td>VARCHAR, email nullable</td><td>As typed by the buyer. Used for the message, never for matching.</td></tr>
+    <tr><td><code>recipient_user_id</code></td><td>UUID FK Users, nullable</td><td>Null until the card is claimed.</td></tr>
+    <tr><td><code>sender_user_id</code></td><td>UUID FK Users, not null</td><td>The buyer, or the client record picked as "who it came from".</td></tr>
+    <tr><td><code>channel</code></td><td>ENUM online, admin</td><td>Client app purchase or front desk sale.</td></tr>
+    <tr><td><code>status</code></td><td>ENUM pending_claim, active, voided</td><td>"Used up" and "expired" are worked out from the ledger, not stored.</td></tr>
+    <tr><td><code>claimed_at</code></td><td>TIMESTAMPTZ, nullable</td><td>When it was added to a wallet.</td></tr>
+    <tr><td><code>voided_at</code>, <code>voided_by</code>, <code>void_reason</code></td><td>TIMESTAMPTZ, UUID, TEXT</td><td>Audit of the void.</td></tr>
+    <tr><td><code>void_refund_destination</code>, <code>void_refund_amount</code></td><td>ENUM wallet, original_method; DECIMAL</td><td>The popup answer and the unused amount refunded.</td></tr>
+  </tbody></table></div>
+  <p class="note">Indexes: unique <code>(code)</code>; <code>(business_id, recipient_phone) WHERE status = 'pending_claim'</code> for the claim at sign-up; <code>(recipient_user_id)</code>; <code>(sender_user_id)</code>; <code>(business_id, created_at)</code> for the admin list.</p>
+
+  <h3><span class="tag new">New</span> GiftCardOrders</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+    <tr><td><code>id</code>, <code>business_id</code></td><td>UUID</td><td></td></tr>
+    <tr><td><code>sender_user_id</code></td><td>UUID FK Users</td><td>Who is paying.</td></tr>
+    <tr><td><code>channel</code></td><td>ENUM online, admin</td><td></td></tr>
+    <tr><td><code>card_amount</code>, <code>quantity</code>, <code>total_amount</code></td><td>DECIMAL, INT, DECIMAL</td><td>Check: <code>total_amount = card_amount × quantity</code>. Quantity is 1 online.</td></tr>
+    <tr><td><code>recipients</code></td><td>JSONB</td><td>Name, phone and email per recipient. Cards are only created from this after payment succeeds.</td></tr>
+    <tr><td><code>payment_transaction_id</code></td><td>UUID FK PaymentTransactions</td><td>One payment for the whole sale.</td></tr>
+    <tr><td><code>status</code></td><td>ENUM pending_payment, paid, failed, cancelled</td><td></td></tr>
+    <tr><td><code>created_by</code></td><td>UUID FK Users, nullable</td><td>The staff member, for front desk sales.</td></tr>
+    <tr><td><code>idempotency_key</code></td><td>VARCHAR, unique</td><td>A retried request returns the first order.</td></tr>
+  </tbody></table></div>
+
+  <h3><span class="tag proposed">Extended</span> WalletLedgers</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+    <tr><td><code>id</code>, <code>business_id</code>, <code>user_id</code>, <code>entry_type</code>, <code>amount</code>, <code>expires_at</code>, <code>source_campaign_id</code>, <code>source_transaction_id</code></td><td>existing</td><td>Unchanged. <code>entry_type</code> stays credit or debit.</td></tr>
+    <tr><td><code>reason</code></td><td>new ENUM</td><td>Credits: gift_card, refund, cashback, spend_reversal, adjustment. Debits: spend, expiry, void.</td></tr>
+    <tr><td><code>remaining_amount</code></td><td>new DECIMAL(10,2), nullable</td><td>Credit rows only: what is left of this lot. Check: between 0 and <code>amount</code>.</td></tr>
+    <tr><td><code>status</code></td><td>existing ENUM, 3 values added</td><td>Credits: active, consumed, expired, reversed. Debits: held, posted, released.</td></tr>
+    <tr><td><code>gift_card_id</code></td><td>new UUID FK GiftCards, nullable</td><td>Set on credits that came from a gift card, including money returned to it.</td></tr>
+    <tr><td><code>source_refund_id</code></td><td>new UUID FK PaymentRefunds, nullable</td><td>The refund that produced this credit.</td></tr>
+    <tr><td><code>reference_type</code>, <code>reference_id</code></td><td>new VARCHAR, UUID</td><td>What a debit paid for: cart, appointment, class_booking, package, gift_card.</td></tr>
+    <tr><td><code>currency</code></td><td>new VARCHAR(10)</td><td>Defaults to the business currency.</td></tr>
+    <tr><td><code>created_by</code></td><td>new UUID, nullable</td><td>Staff member, when a person triggered it.</td></tr>
+    <tr><td><code>idempotency_key</code></td><td>new VARCHAR, unique, nullable</td><td>Stops a retried refund or void from crediting twice.</td></tr>
+  </tbody></table></div>
+  <p class="note">Backfill: existing cashback rows get <code>reason = 'cashback'</code> and <code>remaining_amount = amount</code>. Partial index for the hot path: <code>(business_id, user_id, expires_at) WHERE entry_type = 'credit' AND status = 'active'</code>. Rows are never edited after the fact except <code>remaining_amount</code> and <code>status</code>.</p>
+
+  <h3><span class="tag new">New</span> WalletLedgerAllocations</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+    <tr><td><code>id</code></td><td>UUID PK</td><td></td></tr>
+    <tr><td><code>debit_entry_id</code></td><td>UUID FK WalletLedgers</td><td>The spend, expiry or void.</td></tr>
+    <tr><td><code>lot_id</code></td><td>UUID FK WalletLedgers</td><td>The credit it drew from.</td></tr>
+    <tr><td><code>gift_card_id</code></td><td>UUID, nullable</td><td>Copied from the lot so a card's usage list is one indexed query.</td></tr>
+    <tr><td><code>amount</code></td><td>DECIMAL(10,2)</td><td>Allocations of one debit add up to the debit's amount.</td></tr>
+  </tbody></table></div>
+
+  <h3><span class="tag new">New</span> BusinessWalletConfigs</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Column</th><th>Type</th><th>Notes</th></tr></thead><tbody>
+    <tr><td><code>business_id</code></td><td>UUID, unique FK</td><td>One row per business, created on first read with defaults.</td></tr>
+    <tr><td><code>refund_to_wallet_enabled</code></td><td>BOOLEAN, default false</td><td>The Wallet configuration toggle from #1102.</td></tr>
+    <tr><td><code>credit_expiry_months</code></td><td>INT, default 6</td><td>Check: 1 to 36.</td></tr>
+    <tr><td><code>gift_cards_enabled</code></td><td>BOOLEAN, default false</td><td>Rollout switch per business. Hides gift card sales in both apps until turned on.</td></tr>
+    <tr><td><code>updated_by</code></td><td>UUID</td><td>Audit.</td></tr>
+  </tbody></table></div>
+
+  <h3><span class="tag proposed">Extended</span> existing payment tables</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Table</th><th>Change</th><th>Why</th></tr></thead><tbody>
+    <tr><td><code>PaymentTransactions</code></td><td>Add <code>gift_card</code> to the <code>booking_type</code> enum. <code>booking_id</code> then points at the order.</td><td>A gift card sale is a payment like any other, online or recorded.</td></tr>
+    <tr><td><code>PaymentMethods</code></td><td>Seed a system method with slug <code>wallet</code>.</td><td>The wallet part of a booking becomes its own completed transaction, so receipts, reports and refunds see how each part was paid.</td></tr>
+    <tr><td><code>PaymentRefunds</code></td><td>Add <code>refund_destination</code> (original_method, wallet; default original_method) and <code>wallet_ledger_id</code>.</td><td>One refund record whatever the destination. Wallet refunds skip the gateway call.</td></tr>
+    <tr><td><code>BookingCarts</code></td><td>Add <code>wallet_amount_applied</code> and <code>wallet_hold_entry_id</code>.</td><td>Lets <code>finalizeCart</code> post or release the hold, and replays of an idempotent cart return the same split.</td></tr>
+  </tbody></table></div>
+
+  <h3>Rules the database enforces</h3>
+  <div class="prose"><ul>
+    <li>Balance is always <code>SUM(remaining_amount)</code> over a client's active, unexpired credits at one business. It is never stored.</li>
+    <li>For every client: credits minus posted and held debits equals the sum of remaining amounts. A nightly check alerts on any mismatch.</li>
+    <li>For every gift card: original = used + expired + voided + remaining.</li>
+    <li>Every spend locks the client's lots in a fixed order with <code>SELECT … FOR UPDATE</code> inside the checkout transaction.</li>
+    <li>Reporting: the custom-reports sandbox reads through <code>ai_reporting</code> views, so the new tables need views there before owners can report on gift cards.</li>
+  </ul></div>
+</div></section>
+
+<section id="api"><div class="wrap">
+  <h2>API</h2>
+  <p class="lead">Paths follow the existing mounts (<code>/client/…</code>, <code>/business/:businessId/…</code>, <code>/internal/cron</code>) under <code>/api/v1</code>. Open an endpoint for its permission, request and response. The demo above calls these same shapes.</p>
+
+  <h3>Client app</h3>
+  <div class="eps">
+    <details class="ep"><summary><b class="m get">GET</b><code>/client/businesses/:businessId/wallet</code><span>Balance, next expiry, credits, gift cards and activity. Feeds the Wallet screen, the front-page chip and checkout.</span></summary><div class="ep-b"><small>Signed-in client. <span class="tag new">New</span></small>
+<pre>{
+  "balance": 650.00, "currency": "EGP",
+  "next_expiry": { "amount": 650.00, "expires_at": "2027-04-15T21:59:59Z" },
+  "credits": [{ "id": "…", "reason": "gift_card", "remaining": 650.00, "expires_at": "…", "gift_card_id": "…" }],
+  "gift_cards": [{ "id": "…", "code": "GC-4E56-W923", "amount": 1000, "used": 350, "remaining": 650,
+                   "status": "active", "sender": { "name": "Salma Hassan" } }],
+  "activity": [{ "at": "…", "label": "Vinyasa Flow", "amount": -350 }]
+}</pre></div></details>
+    <details class="ep"><summary><b class="m get">GET</b><code>/client/wallets</code><span>One line per business where the client has a balance or a gift card. The Wallet menu item opens this list.</span></summary><div class="ep-b"><small>Signed-in client. <span class="tag new">New</span> Not in the demo, which has a single business.</small>
+<pre>{ "wallets": [{ "business": { "id": "…", "name": "Nile Flow Studio" }, "balance": 650.00, "currency": "EGP", "gift_cards": 1 }] }</pre></div></details>
+    <details class="ep"><summary><b class="m get">GET</b><code>/client/businesses/:businessId/wallet/gift-cards/:giftCardId</code><span>One gift card with its usage list.</span></summary><div class="ep-b"><small>Signed-in client, only for cards they received. <span class="tag new">New</span></small>
+<pre>{ "code": "GC-4E56-W923", "amount": 1000, "used": 350, "expired": 0, "remaining": 650, "status": "active",
+  "sender": { "name": "Salma Hassan" }, "claimed_at": "…", "expires_at": "…",
+  "usage": [{ "at": "…", "label": "Vinyasa Flow", "kind": "Spent", "amount": -350 }] }</pre></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/client/businesses/:businessId/gift-cards</code><span>Start a gift card purchase. Returns a Paymob session. The card is created by the payment webhook.</span></summary><div class="ep-b"><small>Signed-in client. Send an <code>Idempotency-Key</code> header. Rate limited per buyer. <span class="tag new">New</span></small>
+<pre>// request
+{ "recipient": { "name": "Layla Ibrahim", "phone": "+20 100 000 0199", "email": "layla@example.com" }, "amount": 500 }
+// 201
+{ "order_id": "…", "status": "pending_payment",
+  "payment": { "transaction_id": "…", "amount": 500, "currency": "EGP", "redirect_url": "https://accept.paymob.com/…" } }
+// 422 when the phone is the buyer's own: { "error": "You can't buy a gift card for yourself." }</pre></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/bookings/cart/checkout</code><span>Existing cart checkout, with the wallet added.</span></summary><div class="ep-b"><small>Existing endpoint, extended. New request field <code>use_wallet</code>; new optional price-guard field <code>wallet_applied</code>; new <code>wallet</code> block in the response. <code>total_payable</code> becomes the amount after the wallet.</small>
+<pre>// request (new fields only)
+{ "business_id": "…", "items": [ … ], "use_wallet": true, "wallet_applied": 650.00 }
+// response: part wallet, part card
+{ "booked": false, "total_payable": 250.00,
+  "wallet": { "applied": 650.00, "held": true, "balance_after": 0 },
+  "payment": { "redirect_url": "https://accept.paymob.com/…" } }
+// response: wallet covers everything, so it books at once like a free cart
+{ "booked": true, "total_payable": 0, "wallet": { "applied": 350.00, "balance_after": 300.00 } }</pre>
+      <small>The wallet is spread across chargeable lines in cart order. Lines covered by a package are skipped. A 409 is returned when <code>wallet_applied</code> no longer matches, so the app can refresh the summary.</small></div></details>
+    <details class="ep"><summary><b class="m patch">PATCH</b><code>/client/classes/:id/cancel</code> · <code>/client/appointments/:id/cancel-request</code><span>Existing cancellations. The response now says where each part of the refund went.</span></summary><div class="ep-b"><small>Existing endpoints, extended response.</small>
+<pre>{ "cancelled": true,
+  "refund": { "to_wallet": 450.00, "to_original_method": 0, "returned_to_wallet": 0,
+              "parts": [{ "method": "pay_online", "amount": 450.00, "destination": "wallet", "expires_at": "2027-05-25T21:59:59Z" }] },
+  "wallet_balance": 1100.00 }</pre></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/auth/phone/verify</code><span>Existing WhatsApp code check. After it succeeds, waiting gift cards for that number are claimed.</span></summary><div class="ep-b"><small>Existing endpoint. New field <code>claimed_gift_cards</code> in the response so the app can show the notice.</small>
+<pre>{ "phone_verified": true, "claimed_gift_cards": [{ "code": "GC-TPF8-KVN4", "amount": 500, "business": "Nile Flow Studio" }] }</pre></div></details>
+  </div>
+
+  <h3>Business app</h3>
+  <div class="eps">
+    <details class="ep"><summary><b class="m get">GET</b><code>/business/:businessId/gift-cards</code><span>The Gift cards list. Filters: status, search by name, phone or ID, date range. Paginated.</span></summary><div class="ep-b"><small>Permission <code>giftcards.read</code>. <span class="tag new">New</span></small>
+<pre>{ "gift_cards": [{ "id": "…", "code": "GC-YPAN-WY8H", "amount": 750, "used": 0, "remaining": 750, "status": "active",
+                   "recipient": { "name": "Karim Mostafa", "phone": "+201000000112" }, "sender": { "name": "Delta Tech" } }],
+  "page": 1, "total": 3 }</pre></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/business/:businessId/gift-cards</code><span>Sell and assign one gift card, and record the payment.</span></summary><div class="ep-b"><small>Permission <code>giftcards.write</code>. Recipient and sender are each <code>{ "client_id" }</code> or a new client <code>{ "name", "phone", "email" }</code>. A new client whose phone already exists resolves to that client. <span class="tag new">New</span></small>
+<pre>// request
+{ "recipient": { "client_id": "…" },
+  "sender": { "name": "Delta Tech", "phone": "+20 100 000 0110", "email": "office@deltatech.example" },
+  "amount": 750, "payment_method_slug": "card_at_venue" }
+// 201
+{ "order_id": "…", "payment_transaction_id": "…", "gift_card": { "code": "GC-…", "status": "active", "remaining": 750 } }</pre></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/business/:businessId/gift-cards/bulk</code><span>One sale for several recipients at the same amount. One payment for the total.</span></summary><div class="ep-b"><small>Permission <code>giftcards.write</code>. At least two recipients, no duplicates, all or nothing. <span class="tag new">New</span></small>
+<pre>// request
+{ "sender": { "client_id": "…" }, "amount": 750, "payment_method_slug": "card_at_venue",
+  "recipients": [{ "client_id": "…" }, { "name": "Hana Sherif", "phone": "+20 100 000 0120" }] }
+// 201
+{ "order_id": "…", "total_amount": 1500,
+  "gift_cards": [{ "code": "GC-…", "recipient": "Nour Adel", "amount": 750 }, { "code": "GC-…", "recipient": "Hana Sherif", "amount": 750 }] }</pre></div></details>
+    <details class="ep"><summary><b class="m get">GET</b><code>/business/:businessId/gift-cards/:giftCardId</code><span>One gift card with usage, sale details and void details.</span></summary><div class="ep-b"><small>Permission <code>giftcards.read</code>. Same shape as the client detail, plus recipient phone, channel, payment method and void fields. <span class="tag new">New</span></small></div></details>
+    <details class="ep"><summary><b class="m patch">PATCH</b><code>/business/:businessId/gift-cards/:giftCardId</code><span>Correct the recipient's phone number while the card is still waiting to be claimed.</span></summary><div class="ep-b"><small>Permission <code>giftcards.write</code>. Refused once the card is in a wallet. Audit logged. <span class="tag new">New</span> <span class="tag proposed">Proposed</span></small>
+<pre>{ "recipient_phone": "+20 100 000 0198" }</pre></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/business/:businessId/gift-cards/:giftCardId/void</code><span>Void a card and refund what is left. The body carries the popup answer.</span></summary><div class="ep-b"><small>Permission <code>giftcards.void</code>, granted explicitly, never by default to staff. <span class="tag new">New</span></small>
+<pre>// request
+{ "refund_destination": "wallet", "reason": "Requested by the buyer" }   // or "original_method"
+// 200
+{ "gift_card": { "code": "GC-YPAN-WY8H", "status": "voided", "voided": 750, "remaining": 0 },
+  "refund": { "amount": 750, "destination": "wallet", "to": "Delta Tech" } }
+// 409 when already voided or nothing is left</pre>
+      <small>In one transaction: the remaining credit leaves the recipient's wallet, a refund record is written against the sale's payment, and the sender gets wallet credit or a refund to the original method. A partial refund of a bulk sale's single payment is supported.</small></div></details>
+    <details class="ep"><summary><b class="m get">GET</b><code>/business/:businessId/clients/:clientId/wallet</code><span>A client's balance and gift cards, for the profile and for checkout.</span></summary><div class="ep-b"><small>Permission <code>wallet.read</code>, or <code>checkout.read</code> when called from checkout. Same shape as the client wallet. <span class="tag new">New</span></small></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/business/:businessId/dashboard/checkout/:appointmentId/complete</code> · <code>…/class-booking/:bookingId/complete</code><span>Existing front desk checkout, with the wallet added.</span></summary><div class="ep-b"><small>Existing endpoints and permissions (<code>checkout.write</code>). New field <code>wallet_amount</code>. <code>amount_paid</code> is what is left for the chosen method.</small>
+<pre>// request
+{ "payment_method_slug": "cash_instapay_at_venue", "amount_paid": 250, "wallet_amount": 650 }
+// response
+{ "checked_out": true,
+  "paid": [{ "method": "wallet", "amount": 650 }, { "method": "cash_instapay_at_venue", "amount": 250 }],
+  "wallet_balance_after": 0 }</pre></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>…/checkout/:appointmentId/refund-cancel</code> · <code>…/class-booking/:bookingId/refund-cancel</code> · <code>…/bulk-refund-cancel</code><span>Existing staff refunds, with the popup answer added.</span></summary><div class="ep-b"><small>Existing endpoints and permission (<code>checkout.refund</code>). New field <code>refund_destination</code>. When it is missing the business setting applies, so older app versions keep working.</small>
+<pre>{ "enforce_policy": true, "refund_behavior": "per_policy", "refund_destination": "wallet" }</pre></div></details>
+    <details class="ep"><summary><b class="m get">GET</b><code>/business/:businessId/wallet/settings</code><span>Read the Wallet configuration.</span></summary><div class="ep-b"><small>Permission <code>settings.read</code>. <span class="tag new">New</span></small>
+<pre>{ "refund_to_wallet_enabled": false, "credit_expiry_months": 6, "gift_cards_enabled": true }</pre></div></details>
+    <details class="ep"><summary><b class="m put">PUT</b><code>/business/:businessId/wallet/settings</code><span>Save the refund toggle and the expiry period.</span></summary><div class="ep-b"><small>Permission <code>settings.write</code>. Months must be a whole number from 1 to 36. <span class="tag new">New</span></small>
+<pre>{ "refund_to_wallet_enabled": true, "credit_expiry_months": 6 }</pre></div></details>
+  </div>
+
+  <h3>System</h3>
+  <div class="eps">
+    <details class="ep"><summary><b class="m post">POST</b><code>/payments/webhook/…</code><span>Existing gateway webhook. Now also finalises gift card orders and posts or releases wallet holds.</span></summary><div class="ep-b"><small>Existing. A replay for a transaction that is no longer pending does nothing. The existing reconciliation that abandons stale carts releases their holds too.</small></div></details>
+    <details class="ep"><summary><b class="m post">POST</b><code>/internal/cron/wallet-expiry</code><span>Expire credit past its date. Registered in the scheduler as <code>wallet-credit-expiry</code>, daily at 03:00.</span></summary><div class="ep-b"><small>Same pattern as <code>marketing-lifecycle</code>. Works in batches with <code>FOR UPDATE SKIP LOCKED</code>, and is safe to run twice. A second job, <code>wallet-expiry-reminders</code>, messages clients 14 and 3 days before credit expires. <span class="tag new">New</span></small>
+<pre>{ "expired_credits": 2, "expired_amount": 650.00, "clients_affected": 1 }</pre></div></details>
+  </div>
+
+  <h3>Permissions</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Capability</th><th>Allows</th><th>Default</th></tr></thead><tbody>
+    <tr><td><code>giftcards.read</code> <span class="tag new">New</span></td><td>See the Gift cards section and any card.</td><td>Owner, admin, front desk</td></tr>
+    <tr><td><code>giftcards.write</code> <span class="tag new">New</span></td><td>Sell and assign, single or bulk. Correct an unclaimed card's phone.</td><td>Owner, admin, front desk</td></tr>
+    <tr><td><code>giftcards.void</code> <span class="tag new">New</span></td><td>Void or refund a card.</td><td>Owner and admin. Staff only when granted, as with <code>can_cancel_classes</code>.</td></tr>
+    <tr><td><code>wallet.read</code> <span class="tag new">New</span></td><td>See a client's balance and gift cards on their profile.</td><td>Owner, admin, front desk</td></tr>
+    <tr><td><code>checkout.write</code>, <code>checkout.refund</code>, <code>settings.write</code></td><td>Apply the wallet at checkout, choose a refund destination, change Wallet configuration.</td><td>As today</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<section id="apps"><div class="wrap">
+  <h2>What changes in each codebase</h2>
+  <p class="lead">Mapped to the files that exist today. The client app is a Next.js web app, the business app is Flutter, and neither has any wallet or gift card code yet.</p>
+  <div class="cols">
+    <div class="prose"><h3>Client app <code>bookit-b2c</code></h3><ul>
+      <li><b>Menu.</b> Add Wallet after Packages in <code>LeftSideBarProfile.tsx</code> and <code>ProfileDropDownMenu.tsx</code>.</li>
+      <li><b>Wallet screen.</b> New <code>app/[locale]/home/wallet</code>: balance per business, gift cards, activity. Card detail reuses <code>DetailPanelLayout</code> as Packages does.</li>
+      <li><b>Front-page chip.</b> In <code>BusinessDetails.tsx</code> under the status line, only when the balance is above zero.</li>
+      <li><b>Buy a gift card.</b> New page under the business route. Payment goes through the existing Paymob redirect and <code>payment/result</code> page, with a gift card outcome added to <code>utils/checkoutOutcome.ts</code>.</li>
+      <li><b>Checkout.</b> "Use wallet balance" row in <code>CartPaymentSection.tsx</code>; a Wallet row in the order summary in <code>BookingCart.tsx</code>; <code>CartActionButton.tsx</code> shows the amount after the wallet; <code>useCheckout.ts</code> sends <code>use_wallet</code>.</li>
+      <li><b>Cancel.</b> The confirmation says where the refund will go, and the result says where it went and by when to use it.</li>
+      <li><b>Sign-up.</b> Show "a gift card was waiting for you" after the WhatsApp code step.</li>
+      <li><b>Strings.</b> <code>messages/en.json</code> and <code>ar.json</code>, with right-to-left checks on the new screens.</li>
+    </ul></div>
+    <div class="prose"><h3>Business app <code>bookit_mobile_app</code></h3><ul>
+      <li><b>Menu.</b> Gift cards under Marketing in <code>menu_screen.dart</code> and <code>desktop_nav_items.dart</code>, shown by capability.</li>
+      <li><b>Gift cards feature.</b> New <code>lib/features/gift_cards</code>: list, assign for one or several, detail, void popup. Reuses <code>payment_method_selector.dart</code> and follows <code>assign_package_checkout_sheet.dart</code>.</li>
+      <li><b>Client profile.</b> Wallet and Gift cards sections in <code>client_profile_screen.dart</code>. The Gift cards section is not rendered at all when the client has none.</li>
+      <li><b>Checkout.</b> A wallet row inside the cost box of <code>checkout_bottom_sheet.dart</code>; sends <code>wallet_amount</code>.</li>
+      <li><b>Refund popup.</b> The destination choice is added to <code>bottom_sheet_actions.dart</code> and <code>resolve_no_show_bottom_sheet.dart</code>. Their current text already says refunds go "to the client's balance", which is not true today and becomes true only when wallet is chosen.</li>
+      <li><b>Settings.</b> A Wallet configuration row after Cancellation &amp; Refund Policy in <code>billing_and_payment_screen.dart</code>, and its screen.</li>
+      <li><b>Strings.</b> The three locale files, English, Arabic and Egyptian Arabic.</li>
+    </ul></div>
+    <div class="prose"><h3>API <code>bookit-api</code></h3><ul>
+      <li><b>New module</b> <code>modules/wallet</code>: models, a wallet service (credit, hold, post, release, reverse, expire, balance), gift card service, settings, routes.</li>
+      <li><b>Checkout.</b> <code>cartCheckoutService.js</code>: <code>checkout</code> applies and holds, <code>finalizeCart</code> posts or releases, <code>rollbackPendingCart</code> releases.</li>
+      <li><b>Front desk.</b> <code>modules/dashboard/services/checkout.js</code>: the two complete functions take <code>wallet_amount</code>; the three refund functions take <code>refund_destination</code>.</li>
+      <li><b>Refunds.</b> <code>paymentRefunds.processRefund</code> branches on destination. The client cancellation paths in <code>appointmentPolicyEnforcement.js</code>, <code>classBookingPolicyEnforcement.js</code> and <code>onlinePaymentService.js</code> read the setting.</li>
+      <li><b>Claim.</b> <code>modules/auth/services/phoneAuth.js</code> claims waiting cards once <code>phone_verified_at</code> is set.</li>
+      <li><b>Cashback.</b> <code>marketing/services/settlement.js</code> writes credits through the wallet service.</li>
+      <li><b>Jobs and roles.</b> Two entries in <code>services/scheduler/registry.js</code>; capabilities in <code>config/rolePermissions.defaults.js</code>.</li>
+      <li><b>Messages.</b> Five WhatsApp templates and their emails: gift card received, sign up to claim, refund added to wallet, credit expiring, gift card cancelled.</li>
+    </ul></div>
+  </div>
+
+  <h3>Stories to work</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Story</th><th>Client app</th><th>Business app</th><th>API</th><th>Phase</th></tr></thead><tbody>
+    <tr><td>#1090 Client buys a gift card</td><td>Gift card form, payment, result</td><td></td><td>Order, webhook, claim, message</td><td class="num">1</td></tr>
+    <tr><td>#1091 Admin sells and assigns</td><td></td><td>Gift cards list, assign form</td><td>Assign endpoint, client resolve</td><td class="num">1</td></tr>
+    <tr><td>#1092 Several recipients</td><td></td><td>Assign form, several mode</td><td>Bulk endpoint</td><td class="num">1</td></tr>
+    <tr><td>#1094 Wallet in the client app</td><td>Menu item, Wallet screen, chip</td><td></td><td>Wallet endpoints</td><td class="num">2</td></tr>
+    <tr><td>#1095 Gift cards on the profile</td><td></td><td>Profile sections, card detail</td><td>Client wallet endpoint</td><td class="num">2</td></tr>
+    <tr><td>#1097 Pay at online checkout</td><td>Wallet row, summary, button</td><td></td><td>Cart checkout, holds</td><td class="num">3</td></tr>
+    <tr><td>#1098 Admin applies at checkout</td><td></td><td>Checkout sheet wallet row</td><td>Complete endpoints</td><td class="num">3</td></tr>
+    <tr><td>#1102 Wallet configuration</td><td></td><td>Settings row and screen</td><td>Settings, refund routing</td><td class="num">4</td></tr>
+    <tr><td>#1103 Balance and refund notice</td><td>Cancel confirmation and result</td><td></td><td>Refund response, message</td><td class="num">4</td></tr>
+    <tr><td>#1100 Void or refund a card</td><td>Voided state in history</td><td>Void popup</td><td>Void endpoint</td><td class="num">4</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<section id="plan"><div class="wrap">
+  <h2>Delivery plan</h2>
+  <p class="lead">Six phases. Each one ends with something that can be shown and tested, and each is hidden behind the per-business switch until the last. Sizes are relative, not dates: the team size is not known to this plan.</p>
+  <ol class="phases">
+    <li><h3>Ledger foundations</h3><div class="ph-b"><ul><li>Migrations for the config table, the ledger columns and the allocations table. Backfill cashback rows.</li><li>Wallet service with locking, holds and reversal, and its unit tests.</li><li>Expiry job and settings endpoints. New capabilities.</li></ul><p class="ph-meta">API only · medium · nothing visible yet, but cashback keeps working through the new service.</p></div></li>
+    <li><h3>Selling gift cards</h3><div class="ph-b"><ul><li>Orders and cards tables. Online purchase with webhook. Front desk single and bulk sale.</li><li>Claim at phone verification. Messages to recipients.</li><li>Client app gift card form. Business app Gift cards list and assign form.</li></ul><p class="ph-meta">All three codebases · large · stories #1090, #1091, #1092. Start WhatsApp template approval here: it has a waiting time outside the team's control.</p></div></li>
+    <li><h3>Seeing the wallet</h3><div class="ph-b"><ul><li>Wallet endpoints for clients and staff.</li><li>Client app menu item, Wallet screen, front-page chip. Business app profile sections and card detail.</li></ul><p class="ph-meta">All three · medium · stories #1094, #1095. After this phase people can receive and see money but not yet spend it, so it should ship together with phase 3.</p></div></li>
+    <li><h3>Spending</h3><div class="ph-b"><ul><li>Cart checkout applies the wallet with holds. Webhook and abandonment release them.</li><li>Front desk checkout takes a wallet amount.</li><li>Checkout screens in both apps.</li></ul><p class="ph-meta">All three · large · stories #1097, #1098. The riskiest phase: it touches the checkout path every booking uses.</p></div></li>
+    <li><h3>Refunds and voids</h3><div class="ph-b"><ul><li>Refund destination through every refund path. The setting for client cancellations, the popup for staff.</li><li>Wallet-paid parts return to their gift card. Void a card.</li><li>Client notice. Wallet configuration screen.</li></ul><p class="ph-meta">All three · large · stories #1100, #1102, #1103.</p></div></li>
+    <li><h3>Hardening and launch</h3><div class="ph-b"><ul><li>Concurrency and replay tests against a real database. Ledger balance check job.</li><li>Reports and Odoo mapping for gift card sales and wallet payments. <code>ai_reporting</code> views.</li><li>Arabic review. Pilot with one business, then switch on per business.</li></ul><p class="ph-meta">Mostly API and QA · medium.</p></div></li>
+  </ol>
+</div></section>
+
+<section id="hardening"><div class="wrap">
+  <h2>Security and testing</h2>
+  <h3>What could go wrong with the money</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Risk</th><th>How the design stops it</th></tr></thead><tbody>
+    <tr><td>Two checkouts spend the same credit at once</td><td>Lots are row-locked in a fixed order inside the checkout transaction. The wallet amount is held until payment finishes. A database check keeps <code>remaining_amount</code> at zero or above.</td></tr>
+    <tr><td>A retried request credits or debits twice</td><td>Idempotency keys on gift card orders, voids and refunds, on top of the cart's existing key. Webhook replays do nothing once a transaction has left pending.</td></tr>
+    <tr><td>Someone claims a card sent to another person</td><td>A waiting card is only claimed after the WhatsApp code sets <code>phone_verified_at</code>. Typing a number is never enough. The number is already unique among active clients.</td></tr>
+    <tr><td>Guessing gift card IDs</td><td>The ID is a reference, not a voucher code. Nothing can be redeemed by typing it. Money moves only to the account that owns the phone number.</td></tr>
+    <tr><td>Stolen cards used to buy gift cards</td><td>Minimum and maximum amount, a daily limit per buyer, rate limiting on the purchase endpoint, and refunds of voided cards default to the original method.</td></tr>
+    <tr><td>Staff void a card and pocket the refund</td><td>Void needs its own permission. Every void and refund records who did it, the destination and the reason in the payment audit log.</td></tr>
+    <tr><td>Wrong recipient number typed</td><td>Staff can correct the number while the card is unclaimed. After that, void and reissue.</td></tr>
+    <tr><td>One business reading another's wallets</td><td>Every query carries <code>business_id</code>. A wallet at one business is invisible to another.</td></tr>
+    <tr><td>Rounding drift</td><td>Amounts are DECIMAL(10,2) and handled as whole piastres in code, never as floating point.</td></tr>
+    <tr><td>Phone numbers in logs</td><td>The existing masking helpers are used on every new log line.</td></tr>
+    <tr><td>Expiry on the wrong day</td><td>Expiry is stored as an instant computed from the business's timezone. Earlier UTC assumptions in this codebase shifted class times by hours, so this gets its own tests.</td></tr>
+  </tbody></table></div>
+  <h3>Test plan</h3>
+  <div class="scroll"><table class="tbl"><thead><tr><th>Area</th><th>Cases that must pass</th><th>Level</th></tr></thead><tbody>
+    <tr><td>Ledger</td><td>Soonest-to-expire first; spend across several credits; hold, post and release; reversal returns to the same gift card; balance identity after random sequences.</td><td>Unit, property-based</td></tr>
+    <tr><td>Concurrency</td><td>Two simultaneous checkouts for one client; checkout during expiry; void during checkout; duplicated webhook.</td><td>Integration, real database</td></tr>
+    <tr><td>Gift card purchase</td><td>All four acceptance criteria of #1090; own number refused; payment failure creates no card; number with and without an account.</td><td>Integration, end to end</td></tr>
+    <tr><td>Front desk sale</td><td>Existing and new clients for recipient and sender; same phone resolves to the same client; bulk is all or nothing; duplicate recipient refused.</td><td>Integration</td></tr>
+    <tr><td>Claim</td><td>Claim after verification only; several waiting cards; a card voided while waiting is not claimed.</td><td>Integration</td></tr>
+    <tr><td>Checkout</td><td>Wallet covers all, part, none; package line never uses it; mixed cart; price guard mismatch; abandoned payment releases the hold.</td><td>Integration, end to end</td></tr>
+    <tr><td>Refunds</td><td>Setting on and off for client cancellations; popup answers for staff; venue payments ignore the setting; split refund for wallet plus card.</td><td>Integration</td></tr>
+    <tr><td>Void</td><td>Unused, partly used, waiting; refund to wallet and to original; partial refund of a bulk payment; second void refused.</td><td>Integration</td></tr>
+    <tr><td>Expiry</td><td>End-of-day boundary in Cairo time; setting change does not move existing dates; job run twice changes nothing.</td><td>Unit, integration</td></tr>
+    <tr><td>Screens</td><td>Chip hidden at zero; no Gift cards section when a client has none; Arabic and right-to-left; older app versions without the new fields.</td><td>Widget, end to end</td></tr>
+  </tbody></table></div>
+</div></section>
+
+<section id="open"><div class="wrap">
+  <h2>Open questions</h2>
+  <p class="lead">What this plan assumed. Each line says what the demo does today, so a "yes" means no change.</p>
+  <ol class="qs">
+    <li><b>Do gift cards expire once they are in the wallet?</b><span>Story #1090 says gift cards do not expire. Your answer says wallet credit expires after the owner's period. Assumed: a waiting card never expires, and the clock starts the day it is added to a wallet.</span></li>
+    <li><b>Should refunded money expire at all?</b><span>A refund sent to the wallet is the client's own payment. Letting it lapse after 6 months may conflict with consumer protection rules in Egypt. Assumed: it expires like any credit, and the client is told the date. Worth a legal check before launch. A separate, longer period for refund credit is an easy alternative.</span></li>
+    <li><b>Does the popup also appear for booking refunds, or only for gift cards?</b><span>Assumed: every refund staff start by hand shows it, with the Wallet configuration setting preselecting the answer. Client cancellations follow the setting silently.</span></li>
+    <li><b>Who gets the refund when a card is voided?</b><span>Assumed: the sender, and only the unused amount. The recipient loses the remaining credit and is told.</span></li>
+    <li><b>Is the recipient's email still required when a client buys?</b><span>Matching is by phone only. Assumed: required in the client app as #1090 says, optional at the front desk, and used only for the notification.</span></li>
+    <li><b>Does the client see a voided card?</b><span>Left open in #1100. Assumed: yes, in history, marked voided, so the missing credit is explained.</span></li>
+    <li><b>What do "Story 2.1" and "Story 2.3 of the Osana PRD" say?</b><span>Three stories depend on them for admin payment recording and the wallet balance definition. This plan used the existing front desk checkout and the existing ledger. The document is needed to confirm.</span></li>
+    <li><b>How are gift cards counted in revenue?</b><span>Selling a card and later spending it must not count twice in reports or in the Odoo sync. Assumed: the sale is the revenue event and wallet payments are reported as a payment method, not new income. Finance should confirm.</span></li>
+    <li><b>Limits on amounts.</b><span>The demo uses a minimum of EGP 50 and presets of 250, 500, 1,000 and 2,000. Minimum, maximum and presets need a decision, per business or global.</span></li>
+    <li><b>Does the front-page chip show the whole wallet?</b><span>#1094 says gift card balance. Since gift cards now merge into the wallet, assumed: the chip shows the full wallet balance.</span></li>
+    <li><b>Money returned to a gift card near its expiry.</b><span>Assumed: it keeps the card's original date, but never less than 30 days from the refund.</span></li>
+    <li><b>Does cashback keep its own expiry?</b><span>Campaigns already set cashback expiry in days. Assumed: campaign credit keeps the campaign's value and the owner's period covers everything else.</span></li>
+    <li><b>A company needs a phone number.</b><span>A company is a client record and client phone numbers are unique. Assumed: the company's contact number is used.</span></li>
+  </ol>
+</div></section>
+</main>
+
+<footer><div class="wrap">Plan for epic #1085 and its 15 issues, read from <code>bookitapp-aicha/bookit-fullview</code> on 25 Nov 2026 and checked against the current <code>bookit-api</code>, <code>bookit-b2c</code> and <code>bookit_mobile_app</code> code. The demo is a model of the proposed design with sample data, not the production system.</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+  /* Render the four diagrams, matching the visitor's light or dark setting. */
+  (function () {
+    if (!window.mermaid) {
+      document.querySelectorAll('pre.mermaid').forEach(function (el) { el.style.visibility = 'visible'; });
+      return;
+    }
+    var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    mermaid.initialize({ startOnLoad: false, theme: dark ? 'dark' : 'neutral', securityLevel: 'strict', fontFamily: 'Inter, system-ui, sans-serif' });
+    mermaid.run({ querySelector: 'pre.mermaid' });
+  })();
+</script>
+<script src="sim.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>
